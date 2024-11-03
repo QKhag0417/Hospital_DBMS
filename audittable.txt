@@ -1,0 +1,39 @@
+CREATE TABLE Employee_audit (
+    audit_id SERIAL PRIMARY KEY,
+    Employee_ID VARCHAR(10),
+    Fname VARCHAR(50),
+    Mname VARCHAR(50),
+    Lname VARCHAR(50),
+    Age INT,
+    Fixed_Salary DECIMAL(10, 2),
+    Bonus DECIMAL(10, 2),
+    Gender CHAR(1),
+    Phone_number CHAR(10),
+    Experience_year INT,
+    Working_hour INT,
+    operation_type VARCHAR(10), -- 'INSERT', 'UPDATE', or 'DELETE'
+    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION audit_employee_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO Employee_audit (Employee_ID, Fname, Mname, Lname, Age, Fixed_Salary, Bonus, Gender, Phone_number, Experience_year, Working_hour, operation_type)
+        VALUES (NEW.Employee_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Age, NEW."Fixed_Salary(VND)", NEW."Bonus(VND)", NEW.Gender, NEW.Phone_number, NEW.Experience_year, NEW.Working_hour, 'INSERT');
+    ELSIF TG_OP = 'UPDATE' THEN
+        INSERT INTO Employee_audit (Employee_ID, Fname, Mname, Lname, Age, Fixed_Salary, Bonus, Gender, Phone_number, Experience_year, Working_hour, operation_type)
+        VALUES (NEW.Employee_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Age, NEW."Fixed_Salary(VND)", NEW."Bonus(VND)", NEW.Gender, NEW.Phone_number, NEW.Experience_year, NEW.Working_hour, 'UPDATE');
+    ELSIF TG_OP = 'DELETE' THEN
+        INSERT INTO Employee_audit (Employee_ID, Fname, Mname, Lname, Age, Fixed_Salary, Bonus, Gender, Phone_number, Experience_year, Working_hour, operation_type)
+        VALUES (OLD.Employee_ID, OLD.Fname, OLD.Mname, OLD.Lname, OLD.Age, OLD."Fixed_Salary(VND)", OLD."Bonus(VND)", OLD.Gender, OLD.Phone_number, OLD.Experience_year, OLD.Working_hour, 'DELETE');
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER audit_employee_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Employee
+FOR EACH ROW
+EXECUTE FUNCTION audit_employee_changes();

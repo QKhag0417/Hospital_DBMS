@@ -1,0 +1,348 @@
+
+CREATE TABLE Patient (
+    Patient_ID VARCHAR(10) 			PRIMARY KEY,
+    Fname VARCHAR(50),
+    Minit CHAR(1),
+    Lname VARCHAR(50),
+    Phone_number CHAR(10),
+    Gender CHAR(1),					CHECK (Gender IN ('M', 'F')),
+    Age INT 						CHECK (Age >= 0),
+    "Weight(kg)" DECIMAL(5, 2) 	CHECK ("Weight(kg)" >= 0),
+    "Height(m)" DECIMAL(5, 2) 		CHECK ("Height(m)" >= 0),
+	
+	CONSTRAINT check_patient_id_format CHECK (Patient_ID ~ '^((OP|IP)[0-9]{6})$'),
+	CONSTRAINT check_phone_number_patient CHECK (Phone_number ~ '^0[0-9]{9}$')
+);
+
+CREATE TABLE Dependent (
+    Fname VARCHAR(50),
+    Minit CHAR(1),
+    Lname VARCHAR(50),
+    Phone_number CHAR(11),
+    Patient_ID VARCHAR(10),
+	
+    PRIMARY KEY (Fname, Minit, Lname, Patient_ID),
+    FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID)
+	ON DELETE CASCADE,
+
+	CONSTRAINT check_phone_number_dependent CHECK (Phone_number ~ '^0[0-9]{9}$')
+);
+
+CREATE TABLE Inpatient (
+    Inpatient_ID VARCHAR(10) 		PRIMARY KEY,
+	
+    FOREIGN KEY (Inpatient_ID) REFERENCES Patient(Patient_ID)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE Outpatient (
+    Outpatient_ID VARCHAR(10) 		PRIMARY KEY,
+	
+    FOREIGN KEY (Outpatient_ID) REFERENCES Patient(Patient_ID)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE Employee (
+    Employee_ID VARCHAR(10) 			PRIMARY KEY,
+    Fname VARCHAR(50),
+    Minit CHAR(1),
+    Lname VARCHAR(50),
+    "Fixed_Salary(VND)" DECIMAL(10, 2) CHECK ("Fixed_Salary(VND)" >= 0),
+	"Bonus(VND)" DECIMAL(10, 2)			CHECK ("Bonus(VND)" >= 0),
+    Gender CHAR(1) 						CHECK (Gender IN ('M', 'F')),
+    Phone_number CHAR(10),
+    Experience_year INT 				CHECK (Experience_year >= 0),
+    Working_hour INT 					CHECK (Working_hour >= 0),
+
+	CONSTRAINT check_employee_id_format CHECK (Employee_ID ~ '^(NU|DO|OT)[0-9]{4}$'),
+	CONSTRAINT check_phone_number_employee CHECK (Phone_number ~ '^0[0-9]{9}$')
+);
+
+CREATE TABLE Doctor (
+    Doctor_ID VARCHAR(10) 			PRIMARY KEY,
+	
+    FOREIGN KEY (Doctor_ID) REFERENCES Employee(Employee_ID)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE Nurse (
+    Nurse_ID VARCHAR(10) 			PRIMARY KEY,
+	
+    FOREIGN KEY (Nurse_ID) REFERENCES Employee(Employee_ID)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE Department (
+    Name CHAR(1) 					PRIMARY KEY
+
+	CONSTRAINT check_Name_Dep CHECK (Name ~ '^[A-Z]$')
+);
+
+
+CREATE TABLE Room (
+    Number VARCHAR(3) 				CHECK (Number ~ '^[1-9]0[0-9]$'),
+    Dep_Name CHAR(1),
+	
+    PRIMARY KEY (Number, Dep_Name),
+    FOREIGN KEY (Dep_Name) REFERENCES Department(Name)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE Medication (
+    Medication_ID VARCHAR(10) 		PRIMARY KEY,
+    Medication_Name VARCHAR(20),					
+	"Price(VND)" DECIMAL(10, 2), 	CHECK ("Price(VND)" >= 0),
+	Effect VARCHAR(20),
+	Expired_Date DATE,
+	Patient_ID VARCHAR(10),
+    
+    FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID) 
+	ON DELETE CASCADE,
+	
+	CONSTRAINT check_medication_name CHECK (Medication_Name IN (
+        'Albuterol', 'Salmeterol', 'Lisinopril', 'Amlodipine', 'Omeprazole', 'Esomeprazole', 
+        'Insulin glargine', 'Levothyroxine', 'Sertraline', 'Lorazepam', 'Warfarin', 
+        'Ferrous sulfate', 'Sofosbuvir', 'Silymarin', 'Furosemide', 'Doxorubicin', 
+        'Trastuzumab', 'Fluticasone', 'Azithromycin', 'Ibuprofen', 'Methotrexate')),
+	CONSTRAINT check_medication_ID CHECK (Medication_ID ~* '^([A-Z]{3}[0-9]{7})$'),
+	CONSTRAINT check_effect CHECK (Effect IN ('Pain Relief', 'Antipyretic', 'Anti-inflammatory', 'Antibiotic', 'Antiviral')),
+	CONSTRAINT check_expired_date CHECK (
+        EXTRACT(YEAR FROM Expired_Date) BETWEEN 2024 AND 2029 AND 
+        Expired_Date > CURRENT_DATE + INTERVAL '6 months'  
+    )
+);
+
+CREATE FUNCTION generate_medication_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.Medication_ID := UPPER(SUBSTRING(NEW.Medication_Name FROM 1 FOR 3)) || 
+                         LPAD(NEW.Medication_ID, 7, '0'); 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_generate_medication_id
+BEFORE INSERT ON Medication
+FOR EACH ROW EXECUTE FUNCTION generate_medication_id();
+
+
+CREATE TABLE Bill (
+    Bill_ID VARCHAR(12) 					PRIMARY KEY,					
+	"Total_price(VND)" DECIMAL(10, 2), 	CHECK ("Total_price(VND)">= 0),
+	Date DATE,
+    Customer_ID VARCHAR(10),
+
+	FOREIGN KEY (Customer_ID) REFERENCES Patient(Patient_ID)
+	ON DELETE CASCADE,
+	
+	CONSTRAINT check_date CHECK (
+        EXTRACT(YEAR FROM Date) >= 2015 AND 
+        EXTRACT(YEAR FROM Date) <= EXTRACT(YEAR FROM CURRENT_DATE)
+    ),
+	 CONSTRAINT check_bill_id_digits CHECK ( 
+        LENGTH(SUBSTRING(Bill_ID FROM 9 FOR 4)) = 4 AND
+        SUBSTRING(Bill_ID FROM 9 FOR 4) ~ '^[0-9]{4}$'
+    )
+);
+
+CREATE OR REPLACE FUNCTION generate_bill_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.Bill_ID := SUBSTRING(NEW.Customer_ID FROM 1 FOR 8) || 
+                   LPAD(NEW.Bill_ID::TEXT, 4, '0'); 
+    RETURN NEW;
+END;
+
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER trg_generate_bill_id
+BEFORE INSERT ON Bill
+FOR EACH ROW EXECUTE FUNCTION generate_bill_id();
+
+
+CREATE TABLE Specialties (
+    Doctor_ID CHAR(10),
+	Specialty CHAR(20), 
+
+	PRIMARY KEY (Doctor_ID, Specialty),
+	FOREIGN KEY (Doctor_ID) REFERENCES Employee(Employee_ID)
+	ON DELETE CASCADE,
+	
+	CONSTRAINT check_doctor_id_specialty_format CHECK (Doctor_ID LIKE 'DO%'),
+	CONSTRAINT check_specialty CHECK (Specialty IN (
+        'Respiratory', 'Cardiology', 'Gastroenterology', 
+        'Endocrinology', 'Geriatrics', 'Hematology', 
+        'Hepatology', 'Nephrology', 'Oncology', 
+        'Pulmonology', 'Rheumatology'
+    ))
+);
+
+CREATE TABLE Care_Taking (
+    Inpatient_ID VARCHAR(10),
+	Nurse_ID CHAR(10), 
+
+	PRIMARY KEY (Inpatient_ID, Nurse_ID),
+	FOREIGN KEY (Inpatient_ID) REFERENCES Patient(Patient_ID)
+	ON DELETE CASCADE,
+	
+	FOREIGN KEY (Nurse_ID) REFERENCES Employee(Employee_ID),
+	
+	CONSTRAINT check_inpatient_id_caretaking_format CHECK (Inpatient_ID LIKE 'IP%'),
+	CONSTRAINT check_nurse_id_caretaking_format CHECK (Nurse_ID LIKE 'NU%')
+);
+
+ALTER TABLE Care_Taking
+DROP CONSTRAINT care_taking_inpatient_id_fkey, -- Tên của khóa ngoại hiện tại
+ADD CONSTRAINT care_taking_inpatient_id_fkey
+FOREIGN KEY (Inpatient_ID) REFERENCES Patient(Patient_ID) ON DELETE CASCADE;
+
+CREATE TABLE Treatment (
+    Inpatient_ID VARCHAR(10),
+	Doctor_ID CHAR(10), 
+    Admission_date DATE NOT NULL,      
+    Discharge_date DATE NOT NULL,      
+    Result VARCHAR(50),  
+
+	PRIMARY KEY (Inpatient_ID, Doctor_ID),
+	FOREIGN KEY (Inpatient_ID) REFERENCES Patient(Patient_ID),
+	FOREIGN KEY (Doctor_ID) REFERENCES Employee(Employee_ID),
+	
+	CONSTRAINT check_inpatient_id_treat_format CHECK (Inpatient_ID LIKE 'IP%'),
+	CONSTRAINT check_doctor_id_treat_format CHECK (Doctor_ID LIKE 'DO%'),
+    CONSTRAINT check_admission_date CHECK (
+        Admission_date >= '2015-01-01' AND 
+        Admission_date <= CURRENT_DATE
+    ),
+    CONSTRAINT check_discharge_date CHECK (
+        Discharge_date >= '2015-01-01' AND 
+        Discharge_date <= CURRENT_DATE AND 
+        Discharge_date > Admission_date
+    ),
+    CONSTRAINT check_result CHECK (
+        Result IN ('Under treatment', 'Recovered', 
+                   'Follow-up', 'Transferred to another hospital', 
+                   'Hospitalized', 'Deceased', 'Continue treatment at home')
+    )
+);
+
+CREATE TABLE Examination (
+   	Outpatient_ID VARCHAR(10),
+    Doctor_ID CHAR(10),
+	Diagnosis CHAR(20),
+	Examination_Date DATE 			NOT NULL,
+    Next_Examination DATE,
+    "Fee(VND)" DECIMAL(10, 2) 		CHECK ("Fee(VND)" >= 0),
+
+	PRIMARY KEY (Outpatient_ID, Doctor_ID),
+    FOREIGN KEY (Outpatient_ID) REFERENCES Patient(Patient_ID),
+
+	CONSTRAINT check_inpatient_id_examinate_format CHECK (Outpatient_ID LIKE 'OP%'),
+	CONSTRAINT check_doctor_id_examinate_format CHECK (Doctor_ID LIKE 'DO%'),
+    CONSTRAINT check_examination_date CHECK (
+        Examination_Date >= '2020-01-01' AND
+        Examination_Date <= CURRENT_DATE
+    ),
+
+    CONSTRAINT check_next_examination_date CHECK (
+        Next_Examination IS NULL OR
+      	(Next_Examination > Examination_Date AND
+		Next_Examination >= CURRENT_DATE)
+    )
+);
+
+CREATE TABLE Assignment (
+    Patient_ID VARCHAR(10),
+    DepartmentName CHAR(1), 
+    RoomNumber VARCHAR(3),
+    Purpose VARCHAR(20)				NOT NULL,
+
+	PRIMARY KEY (Patient_ID, DepartmentName,RoomNumber),
+	FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
+	FOREIGN KEY (DepartmentName) REFERENCES Department(Name),
+	FOREIGN KEY (RoomNumber, DepartmentName) REFERENCES Room(Number, Dep_Name),
+
+	CONSTRAINT check_purpose CHECK (
+        Purpose IN ('Examination', 'Treatment')
+    )
+);
+
+CREATE TABLE Working_place (
+    Employee_ID CHAR(10),
+    DepartmentName CHAR(1),
+
+	PRIMARY KEY (Employee_ID, DepartmentName),
+	FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID),
+	FOREIGN KEY (DepartmentName) REFERENCES Department(Name)
+);
+
+
+
+
+INSERT INTO Examination (Outpatient_ID, Doctor_ID, Examination_Date, Next_Examination, "Fee(VND)")
+VALUES ('OP123456', 'DO1234', CURRENT_DATE, NULL, 500000);
+
+select * from Examination;
+
+
+
+
+
+select * from employee;
+select * from patient;
+
+
+
+INSERT INTO Treatment (Inpatient_ID, Doctor_ID, Admission_date, Discharge_date, Result)
+VALUES ('IP000001', 'DO1234', '2015-01-01', '2024-10-10', 'Under treatment');
+INSERT INTO Patient (Patient_ID, Fname, Minit, Lname, Phone_number, Gender, Age, "Weight(kg)", "Height(m)")
+VALUES ('IP000001', 'John', 'A', 'Doe', '0123456789', 'M', 30, 70.50, 1.75);
+
+INSERT INTO Specialties (
+    Doctor_ID, 
+    Specialty
+) VALUES (
+    'DO1234', 
+    'Cardiology'
+);
+INSERT INTO Employee (
+    Employee_ID, 
+    Fname, 
+    Minit, 
+    Lname, 
+    "Fixed_Salary(VND)", 
+    "Bonus(VND)", 
+    Gender, 
+    Phone_number, 
+    Experience_year, 
+    Working_hour
+) VALUES (
+    'NU1234', 
+    'JohnW', 
+    'D', 
+    'Doe', 
+    5000000, 
+    1000000, 
+    'M', 
+    '0123456789', 
+    5, 
+    40
+);
+
+select * from specialties;
+
+
+insert into bill(Bill_ID,"Total_price(VND)",Date,Customer_ID)
+values('0001',11,TO_DATE('11/11/2023', 'DD/MM/YYYY'),'OP123456');
+
+select * from BILL;
+insert into department(name)
+values('A');
+INSERT INTO patient (Patient_ID, Fname, Minit, Lname, Phone_number, Gender, Age, Weight, height)
+VALUES ('IP040002', 'John', 'D', 'Doe', '01234567891', 'K',43 , 50, 4);
+DELETE FROM  patient
+WHERE Gender='K'; 
+select * from room;
+
+
+drop table patient;
+
+

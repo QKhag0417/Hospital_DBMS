@@ -1,0 +1,482 @@
+CREATE TABLE Patient_Audit (
+    action_type VARCHAR(10),          
+    Patient_ID VARCHAR(10),
+    Fname VARCHAR(50),
+    Mname VARCHAR(50),
+    Lname VARCHAR(50),
+    Phone_number CHAR(10),
+    Gender CHAR(1),
+    Age INT,
+    "Weight(kg)" DECIMAL(5, 2),
+    "Height(m)" DECIMAL(5, 2),
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION audit_patient_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Patient_Audit (
+            action_type, Patient_ID, Fname, Mname, Lname, Phone_number, Gender, Age, "Weight(kg)", "Height(m)"
+        ) VALUES (
+            'INSERT', NEW.Patient_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Phone_number, NEW.Gender, NEW.Age, NEW."Weight(kg)", NEW."Height(m)"
+        );
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Patient_Audit (
+            action_type, Patient_ID, Fname, Mname, Lname, Phone_number, Gender, Age, "Weight(kg)", "Height(m)"
+        ) VALUES (
+            'UPDATE', NEW.Patient_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Phone_number, NEW.Gender, NEW.Age, NEW."Weight(kg)", NEW."Height(m)"
+        );
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Patient_Audit (
+            action_type, Patient_ID, Fname, Mname, Lname, Phone_number, Gender, Age, "Weight(kg)", "Height(m)"
+        ) VALUES (
+            'DELETE', OLD.Patient_ID, OLD.Fname, OLD.Mname, OLD.Lname, OLD.Phone_number, OLD.Gender, OLD.Age, OLD."Weight(kg)", OLD."Height(m)"
+        );
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER patient_audit_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Patient
+FOR EACH ROW
+EXECUTE FUNCTION audit_patient_changes();
+
+CREATE TABLE Dependent_Audit (
+    action_type VARCHAR(10),         
+    Fname VARCHAR(50),
+    Mname VARCHAR(50),
+    Lname VARCHAR(50),
+    Phone_number CHAR(10),
+    Patient_ID VARCHAR(10),
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION audit_dependent_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Dependent_Audit (
+            action_type, Fname, Mname, Lname, Phone_number, Patient_ID
+        ) VALUES (
+            'INSERT', NEW.Fname, NEW.Mname, NEW.Lname, NEW.Phone_number, NEW.Patient_ID
+        );
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Dependent_Audit (
+            action_type, Fname, Mname, Lname, Phone_number, Patient_ID
+        ) VALUES (
+            'UPDATE', NEW.Fname, NEW.Mname, NEW.Lname, NEW.Phone_number, NEW.Patient_ID
+        );
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Dependent_Audit (
+            action_type, Fname, Mname, Lname, Phone_number, Patient_ID
+        ) VALUES (
+            'DELETE', OLD.Fname, OLD.Mname, OLD.Lname, OLD.Phone_number, OLD.Patient_ID
+        );
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER dependent_audit_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Dependent
+FOR EACH ROW
+EXECUTE FUNCTION audit_dependent_changes();
+
+
+CREATE TABLE Room_Audit (
+    action_type VARCHAR(10),          
+    Number VARCHAR(3),
+    Dep_Name CHAR(1),
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION audit_room_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Room_Audit (action_type, Number, Dep_Name)
+        VALUES ('INSERT', NEW.Number, NEW.Dep_Name);
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Room_Audit (action_type, Number, Dep_Name)
+        VALUES ('UPDATE', NEW.Number, NEW.Dep_Name);
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Room_Audit (action_type, Number, Dep_Name)
+        VALUES ('DELETE', OLD.Number, OLD.Dep_Name);
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER room_audit_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Room
+FOR EACH ROW
+EXECUTE FUNCTION audit_room_changes();
+
+CREATE TABLE Bill_Audit (
+    Bill_ID VARCHAR(12),                     
+    "Total_price(VND)" DECIMAL(10, 2),        
+    Date DATE,
+    Customer_ID VARCHAR(10),
+    Operation_type VARCHAR(10),              
+    Operation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE OR REPLACE FUNCTION bill_audit_trigger_function()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Bill_Audit (Bill_ID, "Total_price(VND)", Date, Customer_ID, Operation_type)
+        VALUES (NEW.Bill_ID, NEW."Total_price(VND)", NEW.Date, NEW.Customer_ID, 'INSERT');
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Bill_Audit (Bill_ID, "Total_price(VND)", Date, Customer_ID, Operation_type)
+        VALUES (NEW.Bill_ID, NEW."Total_price(VND)", NEW.Date, NEW.Customer_ID, 'UPDATE');
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Bill_Audit (Bill_ID, "Total_price(VND)", Date, Customer_ID, Operation_type)
+        VALUES (OLD.Bill_ID, OLD."Total_price(VND)", OLD.Date, OLD.Customer_ID, 'DELETE');
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER bill_audit_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Bill
+FOR EACH ROW
+EXECUTE FUNCTION bill_audit_trigger_function();
+
+
+CREATE TABLE Specialties_Audit (
+    Doctor_ID CHAR(10),
+    Specialty CHAR(20), 
+
+    Operation_type VARCHAR(10),              
+    Operation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Thời gian thực hiện thao tác
+);
+
+CREATE OR REPLACE FUNCTION specialties_audit_trigger_function()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Kiểm tra loại thao tác và ghi dữ liệu vào bảng audit
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Specialties_Audit (Doctor_ID, Specialty, Operation_type)
+        VALUES (NEW.Doctor_ID, NEW.Specialty, 'INSERT');
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Specialties_Audit (Doctor_ID, Specialty, Operation_type)
+        VALUES (NEW.Doctor_ID, NEW.Specialty, 'UPDATE');
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Specialties_Audit (Doctor_ID, Specialty, Operation_type)
+        VALUES (OLD.Doctor_ID, OLD.Specialty, 'DELETE');
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER specialties_audit_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Specialties
+FOR EACH ROW
+EXECUTE FUNCTION specialties_audit_trigger_function();
+
+CREATE TABLE Care_Taking_Audit (
+    action_type VARCHAR(10), 
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    Inpatient_ID VARCHAR(10),
+    Nurse_ID CHAR(10)
+);
+
+CREATE OR REPLACE FUNCTION audit_care_taking()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Care_Taking_Audit (action_type, Inpatient_ID, Nurse_ID)
+        VALUES ('INSERT', NEW.Inpatient_ID, NEW.Nurse_ID);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Care_Taking_Audit (action_type, Inpatient_ID, Nurse_ID)
+        VALUES ('UPDATE', NEW.Inpatient_ID, NEW.Nurse_ID);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Care_Taking_Audit (action_type, Inpatient_ID, Nurse_ID)
+        VALUES ('DELETE', OLD.Inpatient_ID, OLD.Nurse_ID);
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_care_taking
+AFTER INSERT OR UPDATE OR DELETE ON Care_Taking
+FOR EACH ROW EXECUTE FUNCTION audit_care_taking();
+
+
+CREATE TABLE Treatment_Audit (
+    action_type VARCHAR(10), -- Loại hành động (INSERT, UPDATE, DELETE)
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Thời gian hành động
+    Inpatient_ID VARCHAR(10),
+    Doctor_ID CHAR(10),
+    Admission_date DATE NOT NULL,
+    Discharge_date DATE NOT NULL,
+    Result VARCHAR(50)
+);
+
+CREATE OR REPLACE FUNCTION audit_treatment()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Treatment_Audit (action_type, Inpatient_ID, Doctor_ID, Admission_date, Discharge_date, Result)
+        VALUES ('INSERT', NEW.Inpatient_ID, NEW.Doctor_ID, NEW.Admission_date, NEW.Discharge_date, NEW.Result);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Treatment_Audit (action_type, Inpatient_ID, Doctor_ID, Admission_date, Discharge_date, Result)
+        VALUES ('UPDATE', NEW.Inpatient_ID, NEW.Doctor_ID, NEW.Admission_date, NEW.Discharge_date, NEW.Result);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Treatment_Audit (action_type, Inpatient_ID, Doctor_ID, Admission_date, Discharge_date, Result)
+        VALUES ('DELETE', OLD.Inpatient_ID, OLD.Doctor_ID, OLD.Admission_date, OLD.Discharge_date, OLD.Result);
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_treatment
+AFTER INSERT OR UPDATE OR DELETE ON Treatment
+FOR EACH ROW EXECUTE FUNCTION audit_treatment();
+
+CREATE TABLE Examination_Audit (
+    action_type VARCHAR(10), 
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    Outpatient_ID VARCHAR(10),
+    Doctor_ID CHAR(10),
+    Diagnosis CHAR(20),
+    Examination_Date DATE NOT NULL,
+    Next_Examination DATE,
+    "Fee(VND)" DECIMAL(10, 2)
+);
+
+CREATE OR REPLACE FUNCTION audit_examination()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Examination_Audit (action_type, Outpatient_ID, Doctor_ID, Diagnosis, Examination_Date, Next_Examination, "Fee(VND)")
+        VALUES ('INSERT', NEW.Outpatient_ID, NEW.Doctor_ID, NEW.Diagnosis, NEW.Examination_Date, NEW.Next_Examination, NEW."Fee(VND)");
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Examination_Audit (action_type, Outpatient_ID, Doctor_ID, Diagnosis, Examination_Date, Next_Examination, "Fee(VND)")
+        VALUES ('UPDATE', NEW.Outpatient_ID, NEW.Doctor_ID, NEW.Diagnosis, NEW.Examination_Date, NEW.Next_Examination, NEW."Fee(VND)");
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Examination_Audit (action_type, Outpatient_ID, Doctor_ID, Diagnosis, Examination_Date, Next_Examination, "Fee(VND)")
+        VALUES ('DELETE', OLD.Outpatient_ID, OLD.Doctor_ID, OLD.Diagnosis, OLD.Examination_Date, OLD.Next_Examination, OLD."Fee(VND)");
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_examination
+AFTER INSERT OR UPDATE OR DELETE ON Examination
+FOR EACH ROW EXECUTE FUNCTION audit_examination();
+
+
+CREATE TABLE Assignment_Audit (
+    action_type VARCHAR(10),  
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    Patient_ID VARCHAR(10),
+    DepartmentName CHAR(1),
+    RoomNumber VARCHAR(3),
+    Purpose VARCHAR(20)
+);
+
+CREATE OR REPLACE FUNCTION audit_assignment()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Assignment_Audit (action_type, Patient_ID, DepartmentName, RoomNumber, Purpose)
+        VALUES ('INSERT', NEW.Patient_ID, NEW.DepartmentName, NEW.RoomNumber, NEW.Purpose);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Assignment_Audit (action_type, Patient_ID, DepartmentName, RoomNumber, Purpose)
+        VALUES ('UPDATE', NEW.Patient_ID, NEW.DepartmentName, NEW.RoomNumber, NEW.Purpose);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Assignment_Audit (action_type, Patient_ID, DepartmentName, RoomNumber, Purpose)
+        VALUES ('DELETE', OLD.Patient_ID, OLD.DepartmentName, OLD.RoomNumber, OLD.Purpose);
+        RETURN OLD;
+    END IF;
+    RETURN NULL;  
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_assignment
+AFTER INSERT OR UPDATE OR DELETE ON Assignment
+FOR EACH ROW EXECUTE FUNCTION audit_assignment();
+
+
+CREATE TABLE Working_place_Audit (
+    action_type VARCHAR(10),               
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    Employee_ID CHAR(10),
+    DepartmentName CHAR(1)
+);
+
+CREATE OR REPLACE FUNCTION audit_working_place()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Working_place_Audit (action_type, Employee_ID, DepartmentName)
+        VALUES ('INSERT', NEW.Employee_ID, NEW.DepartmentName);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Working_place_Audit (action_type, Employee_ID, DepartmentName)
+        VALUES ('UPDATE', NEW.Employee_ID, NEW.DepartmentName);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Working_place_Audit (action_type, Employee_ID, DepartmentName)
+        VALUES ('DELETE', OLD.Employee_ID, OLD.DepartmentName);
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_audit_working_place
+AFTER INSERT OR UPDATE OR DELETE ON Working_place
+FOR EACH ROW EXECUTE FUNCTION audit_working_place();
+
+
+CREATE TABLE Employee_Audit (
+    action_type VARCHAR(10),                  
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    Employee_ID VARCHAR(10),
+    Fname VARCHAR(50),
+    Mname VARCHAR(50),
+    Lname VARCHAR(50),
+    Age INT,
+    "Fixed_Salary(VND)" DECIMAL(10, 2),
+    "Bonus(VND)" DECIMAL(10, 2),
+    Gender CHAR(1),
+    Phone_number CHAR(10),
+    Experience_year INT,
+    Working_hour INT
+);
+
+CREATE OR REPLACE FUNCTION audit_employee()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Employee_Audit (action_type, Employee_ID, Fname, Mname, Lname, Age, "Fixed_Salary(VND)", "Bonus(VND)", Gender, Phone_number, Experience_year, Working_hour)
+        VALUES ('INSERT', NEW.Employee_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Age, NEW."Fixed_Salary(VND)", NEW."Bonus(VND)", NEW.Gender, NEW.Phone_number, NEW.Experience_year, NEW.Working_hour);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Employee_Audit (action_type, Employee_ID, Fname, Mname, Lname, Age, "Fixed_Salary(VND)", "Bonus(VND)", Gender, Phone_number, Experience_year, Working_hour)
+        VALUES ('UPDATE', NEW.Employee_ID, NEW.Fname, NEW.Mname, NEW.Lname, NEW.Age, NEW."Fixed_Salary(VND)", NEW."Bonus(VND)", NEW.Gender, NEW.Phone_number, NEW.Experience_year, NEW.Working_hour);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Employee_Audit (action_type, Employee_ID, Fname, Mname, Lname, Age, "Fixed_Salary(VND)", "Bonus(VND)", Gender, Phone_number, Experience_year, Working_hour)
+        VALUES ('DELETE', OLD.Employee_ID, OLD.Fname, OLD.Mname, OLD.Lname, OLD.Age, OLD."Fixed_Salary(VND)", OLD."Bonus(VND)", OLD.Gender, OLD.Phone_number, OLD.Experience_year, OLD.Working_hour);
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_audit_employee
+AFTER INSERT OR UPDATE OR DELETE ON Employee
+FOR EACH ROW EXECUTE FUNCTION audit_employee();
+
+
+CREATE TABLE Department_Audit (
+    action_type VARCHAR(10),               
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    Name CHAR(1)
+);
+
+
+CREATE OR REPLACE FUNCTION audit_department()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Department_Audit (action_type, Name)
+        VALUES ('INSERT', NEW.Name);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Department_Audit (action_type, Name)
+        VALUES ('UPDATE', NEW.Name);
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Department_Audit (action_type, Name)
+        VALUES ('DELETE', OLD.Name);
+        RETURN OLD;
+    END IF;
+    RETURN NULL;  
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE or replace TRIGGER trg_audit_department
+AFTER INSERT OR UPDATE OR DELETE ON Department
+FOR EACH ROW EXECUTE FUNCTION audit_department();
+
+
+CREATE TABLE Medication_Audit (
+    action_type VARCHAR(10),                
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    Medication_ID VARCHAR(10),
+    Medication_Name VARCHAR(20),
+    "Price(VND)" DECIMAL(10, 2),
+    Effect VARCHAR(20),
+    Expired_Date DATE,
+    Patient_ID VARCHAR(10),
+    "Usage" JsonB
+);
+
+CREATE OR REPLACE FUNCTION audit_medication()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO Medication_Audit (action_type, Medication_ID, Medication_Name, "Price(VND)", Effect, Expired_Date, Patient_ID, "Usage")
+        VALUES ('INSERT', NEW.Medication_ID, NEW.Medication_Name, NEW."Price(VND)", NEW.Effect, NEW.Expired_Date, NEW.Patient_ID, NEW."Usage");
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO Medication_Audit (action_type, Medication_ID, Medication_Name, "Price(VND)", Effect, Expired_Date, Patient_ID, "Usage")
+        VALUES ('UPDATE', NEW.Medication_ID, NEW.Medication_Name, NEW."Price(VND)", NEW.Effect, NEW.Expired_Date, NEW.Patient_ID, NEW."Usage");
+        RETURN NEW;
+
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO Medication_Audit (action_type, Medication_ID, Medication_Name, "Price(VND)", Effect, Expired_Date, Patient_ID, "Usage")
+        VALUES ('DELETE', OLD.Medication_ID, OLD.Medication_Name, OLD."Price(VND)", OLD.Effect, OLD.Expired_Date, OLD.Patient_ID, OLD."Usage");
+        RETURN OLD;
+    END IF;
+    RETURN NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_medication
+AFTER INSERT OR UPDATE OR DELETE ON Medication
+FOR EACH ROW EXECUTE FUNCTION audit_medication();

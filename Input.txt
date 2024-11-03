@@ -1,0 +1,191 @@
+INSERT INTO Patient (Patient_ID, Fname, Mname, Lname, Phone_number, Gender, Age, "Weight(kg)", "Height(m)") 
+VALUES
+('OP000001', 'Nguyễn', 'Văn', 'An', '0123456789', 'M', 30, 75.50, 1.75),
+('OP000002', 'Trần', 'Thị', 'Bình', '0987654321', 'F', 25, 60.20, 1.65),
+('IP000003', 'Lê', 'Văn', 'Cường', '0912345678', 'M', 40, 80.00, 1.80),
+('OP000004', 'Phạm', 'Thị', 'Đào', '0909876543', 'F', 22, 55.00, 1.62),
+('IP000005', 'Hoàng', 'Văn', 'Khánh', '0988123456', 'M', 35, 90.30, 1.78),
+('OP000006', 'Vũ', 'Thị', 'Lan', '0932123456', 'F', 29, 50.50, 1.60),
+('IP000007', 'Đỗ', 'Văn', 'Minh', '0945321765', 'M', 45, 85.20, 1.77),
+('OP000008', 'Bùi', 'Thị', 'Nga', '0921765432', 'F', 27, 62.30, 1.68),
+('IP000009', 'Nguyễn', 'Văn', 'Phúc', '0912654378', 'M', 32, 70.10, 1.72),
+('OP000010', 'Phạm', 'Thị', 'Quyên', '0906543789', 'F', 24, 54.80, 1.64),
+('OP000011', 'Nguyễn', 'Thị Hồng', 'Lan', '0123678901', 'F', 28, 52.30, 1.62),
+('IP000012', 'Trần', 'Ngọc Bảo', 'Châu', '0987123456', 'F', 33, 60.80, 1.68),
+('OP000013', 'Phạm', 'Văn Hữu', 'Thành', '0908765432', 'M', 26, 70.50, 1.75),
+('IP000014', 'Lê', 'Thị Kim', 'Liên', '0945123678', 'F', 35, 58.10, 1.63),
+('OP000015', 'Hoàng', 'Nhật Minh', 'Quang', '0912987654', 'M', 31, 78.40, 1.80)
+;
+
+
+INSERT INTO Dependent (Fname, Mname, Lname, Phone_number, Patient_ID) 
+VALUES
+('Nguyễn', 'Thị', 'Mai', '0123456789', 'OP000001'),
+('Nguyễn', 'Thị', 'Mai', '0123456789', 'IP000003'),
+('Nguyễn', 'Quang', 'Duy', '0987654321', 'OP000002'),
+('Trần', 'Văn', 'Dũng', '0987654321', 'IP000005'),
+('Lê', 'Thị', 'Hương', '0912345678', 'OP000004'),
+('Phạm', 'Văn', 'Hải', '0909876543', 'OP000006'),
+('Trần', 'Hoàng Anh', 'Khoa', '0909876543', 'IP000007'),
+('Hoàng', 'Thị', 'Linh', '0988123456', 'IP000009'),
+('Vũ', 'Thị', 'Lan', '0932123456', 'OP000008'),
+('Vũ', 'Thị', 'Lan', '0932123456', 'IP000014')
+;
+
+INSERT INTO Employee (Employee_ID, Fname, Mname, Lname,Age,Gender, Phone_number, Experience_year, Working_hour) 
+VALUES
+('NU0001', 'Nguyễn', 'Văn', 'A',30, 'M', '0123456789', 5, 40),
+('DO0002', 'Trần', 'Thị', 'B',28, 'F', '0987654321', 3, 38),
+('OT0003', 'Lê', 'Văn', 'C',29, 'M', '0912345678', 4, 42),
+('NU0004', 'Phạm', 'Thị', 'D',25, 'F', '0909876543', 2, 36),
+('DO0005', 'Hoàng', 'Văn', 'E',35, 'M', '0988123456', 6, 45),
+('OT0006', 'Vũ', 'Thị', 'F',40, 'F', '0932123456', 1, 30),
+('NU0007', 'Đỗ', 'Văn', 'G',30, 'M', '0945321765', 7, 48),
+('DO0008', 'Bùi', 'Thị', 'H',25, 'F', '0921765432', 5, 39),
+('OT0009', 'Nguyễn', 'Văn', 'I',28, 'M', '0912654378', 3, 41),
+('NU0010', 'Phạm', 'Thị', 'J',25, 'F', '0906543789', 2, 35),
+('DO0011', 'Hoàng', 'Việt', 'Hùng',25, 'M','0912187656',0 , 35),
+('NU0012', 'Mai', '', 'Loan',25, 'M','0912982654',0 , 32)
+;
+
+
+
+INSERT INTO Department (Name) VALUES
+('A'),
+('B'),
+('C'),
+('D'),
+('E');
+
+INSERT INTO Room (Number, Dep_Name) VALUES
+('102', 'A'),
+('103', 'A'),
+('201', 'A'),
+('202', 'A'),
+('102', 'B'),
+('201', 'B'),
+('301', 'B'),
+('102', 'C'),
+('102', 'D'),
+('102', 'E'),
+('103', 'E')
+;
+
+
+INSERT INTO Assignment (Patient_ID, DepartmentName, RoomNumber, Purpose) 
+VALUES
+('OP000001', 'A', '101', 'Examination'),
+('OP000002', 'A', '102', 'Treatment'),
+('IP000003', 'A', '103', 'Examination'),
+('OP000004', 'A', '201', 'Treatment'),
+('IP000005', 'B', '101', 'Examination'),
+('OP000006', 'B', '102', 'Treatment'),
+('IP000007', 'B', '201', 'Examination'),
+('OP000008', 'C', '101', 'Treatment'),
+('IP000009', 'C', '102', 'Examination'),
+('OP000010', 'D', '101', 'Treatment'),
+('OP000011', 'D', '102', 'Examination'),
+('IP000012', 'E', '103', 'Treatment'),
+('OP000013', 'E', '101', 'Examination'),
+('IP000014', 'A', '102', 'Treatment'),
+('OP000015', 'B', '301', 'Examination')
+;
+
+
+INSERT INTO Medication (Medication_ID, Medication_Name, "Price(VND)", Effect, Expired_Date, Patient_ID) VALUES
+('0000001', 'Albuterol', 20000.00, 'Pain Relief', '2025-12-31', 'OP000001'),
+('0000002', 'Salmeterol', 15000.00, 'Antipyretic', '2026-03-15', 'OP000002'),
+('0000003', 'Lisinopril', 30000.00, 'Anti-inflammatory', '2027-05-20', 'IP000003'),
+('0000004', 'Amlodipine', 25000.00, 'Antibiotic', '2025-08-10', 'OP000004'),
+('0000005', 'Omeprazole', 18000.00, 'Antiviral', '2026-07-30', 'IP000005'),
+('0000006', 'Esomeprazole', 22000.00, 'Pain Relief', '2028-01-01', 'OP000006'),
+('0000007', 'Insulin glargine', 40000.00, 'Pain Relief', '2029-06-15', 'IP000007'),
+('0000008', 'Levothyroxine', 28000.00, 'Antipyretic', '2025-11-01', 'OP000008'),
+('0000009', 'Sertraline', 32000.00, 'Anti-inflammatory', '2027-10-25', 'IP000009'),
+('0000010', 'Lorazepam', 20000.00, 'Antibiotic', '2025-09-30', 'OP000010'),
+('0000011', 'Warfarin', 15000.00, 'Antiviral', '2026-12-20', 'OP000011'),
+('0000012', 'Ferrous sulfate', 18000.00, 'Pain Relief', '2029-02-28', 'IP000012'),
+('0000013', 'Sofosbuvir', 40000.00, 'Antipyretic', '2025-05-05', 'OP000013'),
+('0000014', 'Silymarin', 17000.00, 'Anti-inflammatory', '2028-11-15', 'IP000014'),
+('0000015', 'Furosemide', 22000.00, 'Antibiotic', '2026-03-01', 'OP000015')
+;
+
+INSERT INTO Bill (Bill_ID, "Total_price(VND)", Date, Customer_ID) VALUES
+('0001', 150000.00, '2023-01-15', 'OP000001'),
+('0002', 200000.00, '2023-02-10', 'OP000002'),
+('0003', 300000.00, '2023-03-20', 'IP000003'),
+('0004', 180000.00, '2023-04-05', 'OP000004'),
+('0005', 250000.00, '2023-05-25', 'IP000005'),
+('0006', 120000.00, '2023-06-30', 'OP000006'),
+('0007', 210000.00, '2023-07-15', 'IP000007'),
+('0008', 300000.00, '2023-08-20', 'OP000008'),
+('0009', 170000.00, '2023-09-10', 'IP000009'),
+('0010', 220000.00, '2023-10-05', 'OP000010'),
+('0011', 140000.00, '2023-11-12', 'OP000011'),
+('0012', 280000.00, '2023-12-01', 'IP000012'),
+('0013', 190000.00, '2023-12-20', 'OP000013'),
+('0014', 230000.00, '2024-01-10', 'IP000014'),
+('0015', 160000.00, '2024-01-15', 'OP000015')
+;
+
+
+INSERT INTO Examination (Outpatient_ID, Doctor_ID, Diagnosis, Examination_Date, Next_Examination, "Fee(VND)") VALUES
+('OP000001', 'DO0002', 'Flu', '2023-01-10', NULL, 500000.00),
+('OP000002', 'DO0005', 'Allergy', '2023-02-15', '2024-12-15', 300000.00),
+('OP000004', 'DO0002', 'Migraine', '2023-04-20', NULL, 400000.00),
+('OP000006', 'DO0008', 'Back Pain', '2023-06-05', NULL, 350000.00),
+('OP000008', 'DO0005', 'Checkup', '2023-08-20', NULL, 250000.00),
+('OP000010', 'DO0002', 'Stomachache', '2023-10-05', NULL, 300000.00),
+('OP000011', 'DO0005', 'Anxiety', '2023-11-12', '2024-11-12', 400000.00),
+('OP000013', 'DO0002', 'Fatigue', '2024-01-10', '2024-12-10', 300000.00),
+('OP000015', 'DO0008', 'Checkup', '2024-02-20', '2025-03-20', 250000.00)
+;
+
+INSERT INTO Specialties (Doctor_ID, Specialty) VALUES
+('DO0002', 'Cardiology'),       
+('DO0005', 'Gastroenterology'), 
+('DO0008', 'Pulmonology'),
+('DO0002', 'Gastroenterology'),
+('DO0002', 'Pulmonology'),
+('DO0005', 'Hematology'), 
+('DO0008', 'Oncology')
+;      
+
+
+INSERT INTO Care_Taking (Inpatient_ID, Nurse_ID) VALUES
+('IP000003', 'NU0001'),
+('IP000003', 'NU0004'), 
+('IP000005', 'NU0004'),  
+('IP000007', 'NU0007'),
+('IP000007', 'NU0001'), 
+('IP000009', 'NU0007'), 
+('IP000012', 'NU0010'),
+('IP000014', 'NU0010')
+;  
+
+INSERT INTO Treatment (Inpatient_ID, Doctor_ID, Admission_date, Discharge_date, Result) VALUES
+('IP000003', 'DO0002', '2023-01-01', '2023-01-10', 'Recovered'), 
+('IP000003', 'DO0005', '2023-01-01', '2023-01-10', 'Recovered'), 
+('IP000005', 'DO0005', '2023-02-01', '2023-02-20', 'Under treatment'), 
+('IP000007', 'DO0002', '2023-03-05', '2023-03-15', 'Transferred to another hospital'),   
+('IP000012', 'DO0008', '2023-04-10', '2023-04-20', 'Follow-up'),  
+('IP000014', 'DO0002', '2023-05-01', '2023-05-05', 'Recovered')
+;  
+
+
+INSERT INTO Working_place (Employee_ID, DepartmentName) VALUES
+('NU0001', 'A'),
+('NU0001', 'B'), 
+('DO0002', 'B'),  
+('OT0003', 'C'),  
+('NU0004', 'D'),  
+('DO0005', 'E'),  
+('OT0006', 'A'),  
+('NU0007', 'B'), 
+('DO0008', 'C'),
+('DO0008', 'D'), 
+('OT0009', 'D'),  
+('NU0010', 'E'),
+('NU0012', 'B'),
+('DO0011', 'A')
+;  

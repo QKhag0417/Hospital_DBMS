@@ -1,0 +1,17 @@
+pg_dump -U receptionist -F c Myhospital > "D:\BKEL\Semester 241\Database Systems\backupdata\lastestdata.sql"
+
+psql -U receptionist -d Myhospital -1 -f "D:\BKEL\Semester 241\Database Systems\backu
+pdata\lastestdata.sql
+
+receptionist
+
+pg_restore -U receptionist -d Myhospital "D:\BKEL\Semester 241\Database Systems\backupdata\lastestdata.sql"
+1234
+
+
+psql -U receptionist -d Myhospital  -f "D:\BKEL\Semester 241\Database Systems\backupdata\lastestdata.sql"
+
+pg_dump -U receptionist --data-only Myhospital > "D:\BKEL\Semester 241\Database Systems\backupdata\lastestdata.sql"
+
+
+psql -U receptionist -d Myhospital -f "D:\BKEL\Semester 241\Database Systems\backupdata\lastestdata.sql"

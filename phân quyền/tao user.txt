@@ -1,0 +1,23 @@
+CREATE ROLE patient
+login 
+password 'patient';
+
+CREATE ROLE receptionist
+login 
+password 'receptionist';
+
+CREATE ROLE doctor
+login 
+password 'doctor';
+
+CREATE ROLE nurse
+login 
+password 'nurse';
+
+CREATE ROLE other_employee
+login 
+password 'other';
+
+CREATE ROLE dependent
+login 
+password 'dependent';

@@ -1,0 +1,83 @@
+CREATE OR REPLACE VIEW doctor_info AS
+SELECT 
+    t.employee_id, 
+    t.fname || ' ' || t.mname || ' ' || t.lname AS name,
+    t.age AS age,
+    t.gender AS gender,
+	t."Fixed_Salary(VND)" AS "Fixed_Salary(VND)",
+	t."Bonus(VND)" AS "Bonus(VND)",
+    t.phone_number AS phone_number
+FROM 
+    employee t
+WHERE 
+    t.employee_id = 'DO0002';
+
+
+CREATE OR REPLACE VIEW doctor_Working_place AS
+SELECT 
+    t.departmentname AS department 
+FROM 
+    employee s
+JOIN 
+	Working_place t ON t.employee_ID = s.employee_ID
+WHERE 
+    t.employee_id = 'DO0002';
+	
+CREATE OR REPLACE VIEW doctor_examination AS
+SELECT 
+    t.outpatient_ID AS patient_ID, 
+	s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+	u.fname || ' ' || u.mname || ' ' || u.lname AS dependent_name,
+    u.phone_number AS dependent_phone_number,
+	t.diagnosis AS diagnosis,
+	TO_CHAR(t.examination_date, 'DD/MM/YYYY') AS examnination_date,
+	TO_CHAR(t.next_examination, 'DD/MM/YYYY') AS next_examnination,
+	t."Fee(VND)" AS "Fee(VND)"
+FROM 
+    examination t
+JOIN 
+    patient s ON t.outpatient_ID = s.patient_ID
+JOIN
+	employee r ON t.doctor_ID = r.employee_ID
+JOIN
+	dependent u ON u.patient_ID = s.patient_ID
+WHERE 
+    t.doctor_id = 'DO0002'
+ORDER BY 
+    t.outpatient_ID;  
+
+CREATE OR REPLACE VIEW doctor_treatment AS
+SELECT 
+    t.inpatient_ID AS patient_ID, 
+	s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+	u.fname || ' ' || u.mname || ' ' || u.lname AS dependent_name,
+    u.phone_number AS dependent_phone_number,
+	TO_CHAR(t.admission_date, 'DD/MM/YYYY') AS admission_date,
+	TO_CHAR(t.discharge_date, 'DD/MM/YYYY') AS discharge_date,
+	t.result AS "result"
+FROM 
+    treatment t
+JOIN 
+    patient s ON t.inpatient_ID = s.patient_ID
+JOIN
+	employee r ON t.doctor_ID = r.employee_ID
+JOIN
+	dependent u ON u.patient_ID = s.patient_ID
+WHERE 
+    t.doctor_id = 'DO0002'
+ORDER BY 
+    t.inpatient_ID;
+
+CREATE OR REPLACE VIEW doctor_specialty AS
+SELECT 
+    t.specialty  
+FROM 
+    specialties t
+WHERE 
+    t.doctor_id = 'DO0002';
+
+GRANT SELECT ON doctor_info TO doctor;
+GRANT SELECT ON doctor_Working_place TO doctor;
+GRANT SELECT ON doctor_examination TO doctor;
+GRANT SELECT ON doctor_treatment TO doctor;
+GRANT SELECT ON doctor_specialty TO doctor;

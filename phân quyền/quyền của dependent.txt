@@ -1,0 +1,144 @@
+CREATE OR REPLACE VIEW mypatients_info AS
+SELECT 
+    t.patient_id, 
+    s.fname || ' ' || t.mname || ' ' || t.lname AS patient_name,
+    s.age AS patient_age,
+    s.gender AS patient_gender,
+    s.phone_number AS patient_phone_number,
+    s."Height(m)" AS "patient_height(m)",
+    s."Weight(kg)" AS "patient_weight(kg)"
+FROM 
+    dependent t
+JOIN 
+    patient s ON t.patient_id = s.patient_id
+WHERE 
+    t.patient_id = 'OP000001'OR t.patient_id = 'IP000003';
+
+CREATE OR REPLACE VIEW mypatients_assignment AS
+SELECT
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.roomnumber AS room, 
+    t.departmentname AS deparment,
+    t.purpose AS purpose
+FROM 
+    assignment t
+JOIN 
+    patient s ON t.patient_id = s.patient_id
+JOIN
+	dependent r ON r.patient_id = s.patient_id 
+WHERE 
+    t.patient_id = 'OP000001' OR t.patient_id = 'IP000003'
+ORDER BY 
+    s.patient_id;  
+
+	
+CREATE OR REPLACE VIEW mypatients_examination AS
+SELECT 
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.doctor_ID AS doctor_ID, 
+	r.fname || ' ' || r.mname || ' ' || r.lname AS doctor_name,
+	t.diagnosis AS diagnosis,
+	TO_CHAR(t.examination_date, 'DD/MM/YYYY') AS examnination_date,
+	TO_CHAR(t.next_examination, 'DD/MM/YYYY') AS next_examnination,
+	t."Fee(VND)" AS "Fee(VND)"
+FROM 
+    examination t
+JOIN 
+    patient s ON t.outpatient_ID = s.patient_ID
+JOIN
+	employee r ON t.doctor_ID = r.employee_ID
+JOIN
+	dependent x ON x.patient_id = s.patient_id 
+WHERE 
+    t.outpatient_id = 'OP000001' OR t.outpatient_id = 'IP000003'
+ORDER BY 
+    s.patient_id; 
+
+CREATE OR REPLACE VIEW mypatients_treatment AS
+SELECT 
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.doctor_ID AS doctor_ID, 
+	r.fname || ' ' || r.mname || ' ' || r.lname AS doctor_name,
+	TO_CHAR(t.admission_date, 'DD/MM/YYYY') AS admission_date,
+	TO_CHAR(t.discharge_date, 'DD/MM/YYYY') AS discharge_date,
+	t.result AS result
+FROM 
+    treatment t
+JOIN 
+    patient s ON t.inpatient_ID = s.patient_ID
+JOIN
+	employee r ON t.doctor_ID = r.employee_ID
+JOIN
+	dependent x ON x.patient_id = s.patient_id
+WHERE 
+    t.inpatient_id = 'OP000001' OR t.inpatient_id = 'IP000003'
+ORDER BY 
+    s.patient_id;
+
+CREATE OR REPLACE VIEW mypatients_care_taking AS
+SELECT 
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.nurse_ID AS nurse_ID, 
+	r.fname || ' ' || r.mname || ' ' || r.lname AS nurse_name
+FROM 
+    care_taking t
+JOIN 
+    patient s ON t.inpatient_ID = s.patient_ID
+JOIN
+	employee r ON t.nurse_ID = r.employee_ID
+JOIN
+	dependent x ON x.patient_id = s.patient_id
+WHERE 
+    t.inpatient_id = 'OP000001' OR t.inpatient_id = 'IP000003'
+ORDER BY 
+    s.patient_id;
+
+CREATE OR REPLACE VIEW mypatients_medication AS
+SELECT 
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.medication_ID AS medication_ID, 
+	t.medication_name AS medication_name,
+	t."Price(VND)" AS "Price(VND)",
+	t.effect AS effect,
+	TO_CHAR(t.expired_date, 'DD/MM/YYYY') AS expired_date
+FROM 
+    medication t
+JOIN 
+    patient s ON t.patient_ID = s.patient_ID
+JOIN
+	dependent x ON x.patient_id = s.patient_id
+WHERE 
+    t.patient_id = 'OP000001' OR t.patient_id = 'IP000003'
+ORDER BY 
+    s.patient_id;
+
+CREATE OR REPLACE VIEW mypatients_bill AS
+SELECT 
+	s.patient_id, 
+    s.fname || ' ' || s.mname || ' ' || s.lname AS patient_name,
+    t.bill_ID AS bill_ID, 
+	TO_CHAR(t.date, 'DD/MM/YYYY') AS date,
+	t."Total_price(VND)" AS "Total_price(VND)"
+FROM 
+    bill t
+JOIN 
+    patient s ON t.customer_ID = s.patient_ID
+JOIN
+	dependent x ON x.patient_id = s.patient_id
+WHERE 
+   t.customer_ID = 'OP000001'OR customer_ID = 'IP000003'
+ORDER BY 
+    s.patient_id;
+
+GRANT SELECT ON mypatients_info TO dependent;
+GRANT SELECT ON mypatients_assignment TO dependent;
+GRANT SELECT ON mypatients_examination TO dependent;
+GRANT SELECT ON mypatients_treatment TO dependent;
+GRANT SELECT ON mypatients_care_taking TO dependent;
+GRANT SELECT ON mypatients_medication TO dependent;
+GRANT SELECT ON mypatients_bill TO dependent;

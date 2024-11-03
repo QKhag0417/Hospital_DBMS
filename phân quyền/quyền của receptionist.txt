@@ -1,0 +1,18 @@
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO receptionist;
+
+GRANT USAGE ON SCHEMA public TO receptionist;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO receptionist;
+GRANT SELECT, USAGE ON ALL SEQUENCES IN SCHEMA public TO receptionist;
+
+GRANT USAGE ON SCHEMA public TO receptionist;
+
+-- Cấp quyền trên tất cả các bảng trong schema public
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO receptionist;
+
+-- Cấp quyền trên tất cả các hàm trong schema public
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO receptionist;
+
+-- Cấp quyền trên tất cả các sequence trong schema public
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO receptionist;
+
+GRANT ALL PRIVILEGES ON SCHEMA public TO receptionist;
