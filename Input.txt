@@ -105,7 +105,7 @@ INSERT INTO Medication (Medication_ID, Medication_Name, "Price(VND)", Effect, Ex
 ('0000010', 'Lorazepam', 20000.00, 'Antibiotic', '2025-09-30', 'OP000010'),
 ('0000011', 'Warfarin', 15000.00, 'Antiviral', '2026-12-20', 'OP000011'),
 ('0000012', 'Ferrous sulfate', 18000.00, 'Pain Relief', '2029-02-28', 'IP000012'),
-('0000013', 'Sofosbuvir', 40000.00, 'Antipyretic', '2025-05-05', 'OP000013'),
+('0000013', 'Sofosbuvir', 40000.00, 'Antipyretic', '2026-05-05', 'OP000013'),
 ('0000014', 'Silymarin', 17000.00, 'Anti-inflammatory', '2028-11-15', 'IP000014'),
 ('0000015', 'Furosemide', 22000.00, 'Antibiotic', '2026-03-01', 'OP000015')
 ;
