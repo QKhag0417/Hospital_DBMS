@@ -1,0 +1,81 @@
+
+const jwt = require('jsonwebtoken');
+const getPatientbyID = require('../models/patient');
+const getDependentbyID = require('../models/dependent');
+const getEmployeebyID = require('../models/employee');
+
+const loginUser = async (req, res, next) => {
+    try {
+
+        const result = await getUserByID(req.body.Username);
+        
+        if (!result || result.length === 0) {
+          return res.status(400).send('Sai tên đăng nhập');
+        }
+        if (req.body.requestedName !== result[0].username) {
+            return res.status(401).send('Sai tên đăng nhập');
+        }
+        if (req.body.password !== result[0].password) {
+            return res.status(401).send('Sai mật khẩu');
+        }
+
+        const token = jwt.sign(
+        {
+            ID: result[0].id,
+            type: result[0].type,
+        }, 
+            'carlos', 
+            { expiresIn: '1h' }
+        );
+          
+        delete result.password;
+        res
+            .cookie('auth', token, { maxAge: 3600 * 1000, path: '/' }) 
+            .json({ message: 'Đăng nhập thành công!', userInfo: result, token: token });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+
+const getUserByID = async(req, res, next) => {
+
+    try {
+        const id = req.userInfo.ID, type = req.userInfo.type;
+
+        if (id === undefined || type === undefined) {
+            return res.status(404).send("Không có dữ liệu người dùng!");
+        }
+        let result;
+        if (type=='Paitent') {
+            result = await getPatientbyID(id);
+        }
+        else if (type=='Dependent') {
+            result = await getDependentbyID(id);
+        }
+        else if (type=='Employee') {
+            result = await getEmployeebyID(id);
+        }
+        else{
+            console.log("wwtf co role khac nua a")
+        }
+   
+        
+        if (!result) {
+            return res.status(400).send('User không tồn tại');
+        }
+        
+        delete result.password;
+   
+        res.json(result);
+    }
+    catch (err) {
+        next(err);
+    }
+  }
+
+
+module.exports = {
+    loginUser,
+    getUserByID
+};

@@ -2,8 +2,60 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import axios from 'axios';
+import "./Login.css";
 
-function HomeBeforeLogin() {
+function Login() {
+	const url = `http://localhost:3000/api/login`;
+ 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "username") {
+      setUsername(value);
+    } 
+    else if (name === "password") {
+      setPassword(value);
+    }
+	else{
+		setRole(value)
+	}
+
+	console.log("username",username)
+	console.log("password",password)
+	console.log("role",role)
+  };
+
+
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(url, {
+        Username: username,
+        Password: password,
+		Role: role
+      }, {
+        withCredentials: true
+      });
+      localStorage.setItem('userCredentials', JSON.stringify({ token: response.data.token}));
+
+    }
+      
+    catch (error) {
+      if (error.response) {
+		console.log(error)
+      }
+      else {
+        console.log("Khong ket noi dc vs server")
+      }
+    }
+  }
+
 	return (
 		<div className="container">
 			<div className="hospital-banner">
@@ -12,7 +64,7 @@ function HomeBeforeLogin() {
 			<div className="login-container">
 				<h1>Hospital Login</h1>
 				<form action="/dashboard" method="post">
-					<select name="role" required>
+					<select name="role" value={role} onChange={handleChange} required>
 						<option value="" disabled selected>
 							Select Role
 						</option>
@@ -22,10 +74,18 @@ function HomeBeforeLogin() {
 						<option value="doctor">Doctor</option>
 						<option value="receptionist">Receptionist</option>
 					</select>
-					<input type="text" name="username" placeholder="Username" required />
+					<input 
+						type="text" 
+						name="username" 
+						value={username}
+            			onChange={handleChange}
+						placeholder="Username" 
+						required />
 					<input
 						type="password"
 						name="password"
+						value={password}
+            			onChange={handleChange}
 						placeholder="Password"
 						required
 					/>
@@ -45,4 +105,4 @@ function HomeBeforeLogin() {
 	);
 }
 
-export default HomeBeforeLogin;
+export default Login;

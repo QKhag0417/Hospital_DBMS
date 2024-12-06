@@ -9,7 +9,7 @@ import Login from './components/Login.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [user, setUser] = useState({ token: null, isSPSO: false, listFiles: [] });
+  const [user, setUser] = useState({ token: null, type: null, listFiles: [] });
   const [cookies] = useCookies();
   
   useEffect(() => {
@@ -29,7 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeBeforeLogin />} />
           <Route path="/login" element={<Login/>} />
-          
+
         </Routes>
       </Router>
     </UserContext.Provider>
