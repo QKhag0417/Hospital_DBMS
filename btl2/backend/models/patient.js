@@ -13,5 +13,5 @@ const getPatientbyID= async (id) => {
 }
 
 module.exports = {
-    getPatientByID
+    getPatientbyID
 };

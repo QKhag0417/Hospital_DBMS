@@ -1,28 +1,37 @@
 
 const jwt = require('jsonwebtoken');
-const getPatientbyID = require('../models/patient');
-const getDependentbyID = require('../models/dependent');
-const getEmployeebyID = require('../models/employee');
+const {getPatientbyID} = require('../models/patient');
+const {getDependentbyID} = require('../models/dependent');
+const {getEmployeebyID} = require('../models/employee');
+const {getUserToken} = require('../models/user');
+
+
 
 const loginUser = async (req, res, next) => {
     try {
+        console.log("gggggggggggggggggg",req.body.Username)
+        console.log("gggggggggggggggggg",req.body.Password)
+        console.log("gggggggggggggggggg",req.body.Role)
+        const result = await getUserToken(req.body.Username);
 
-        const result = await getUserByID(req.body.Username);
-        
+        console.log("jjjjjjjjjjjjj",result)
         if (!result || result.length === 0) {
           return res.status(400).send('Sai tên đăng nhập');
         }
-        if (req.body.requestedName !== result[0].username) {
+        if (req.body.Username !== result.username) {
             return res.status(401).send('Sai tên đăng nhập');
         }
-        if (req.body.password !== result[0].password) {
+        if (req.body.Password !== result.password) {
             return res.status(401).send('Sai mật khẩu');
+        }
+        if (req.body.Role !== result.type) {
+            return res.status(401).send('Sai type');
         }
 
         const token = jwt.sign(
         {
-            ID: result[0].id,
-            type: result[0].type,
+            ID: result.id,
+            type: result.type,
         }, 
             'carlos', 
             { expiresIn: '1h' }
@@ -34,7 +43,7 @@ const loginUser = async (req, res, next) => {
             .json({ message: 'Đăng nhập thành công!', userInfo: result, token: token });
     }
     catch (err) {
-        next(err);
+        console.log(err);
     }
 };
 
@@ -70,7 +79,7 @@ const getUserByID = async(req, res, next) => {
         res.json(result);
     }
     catch (err) {
-        next(err);
+        console.log(err);
     }
   }
 

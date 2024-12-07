@@ -5,6 +5,8 @@ import { UserContext } from './context/UserContext.js'
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import HomeBeforeLogin from './components/HomeBeforeLogin.jsx';
+import Patient from './components/Patient.jsx';
+import Employee from './components/Employee.jsx';
 import Login from './components/Login.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -29,7 +31,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeBeforeLogin />} />
           <Route path="/login" element={<Login/>} />
-
+          <Route path="/patient" element={<Patient/>} />
+          <Route path="/employee" element={<Employee/>} />
         </Routes>
       </Router>
     </UserContext.Provider>

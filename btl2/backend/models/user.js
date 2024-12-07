@@ -1,12 +1,12 @@
 const database = require('../database/database');
 
 
-const getUserByID = async (username) => {
+const getUserToken = async (username) => {
 
     try {
-        const [result] = await database.query('SELECT * FROM user WHERE username = ?', [username]);
+        const result = await database.query('SELECT * FROM userinfo WHERE username = $1', [username]);
 
-        return result;
+        return result.rows[0];
 
     } catch (err) {
         throw err;
@@ -14,5 +14,5 @@ const getUserByID = async (username) => {
 }
 
 module.exports = {
-    getUserByID
+    getUserToken
 };

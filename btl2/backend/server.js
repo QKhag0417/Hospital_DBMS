@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const port = 3000;
+const port = 3010;
 
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3000',
     credentials: true,
 };
 

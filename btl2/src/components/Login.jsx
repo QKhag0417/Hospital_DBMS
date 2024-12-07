@@ -6,7 +6,7 @@ import axios from 'axios';
 import "./Login.css";
 
 function Login() {
-	const url = `http://localhost:3000/api/login`;
+	const url = `http://localhost:3010/api/login`;
  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -42,10 +42,16 @@ function Login() {
       }, {
         withCredentials: true
       });
+	  console.log(response)
       localStorage.setItem('userCredentials', JSON.stringify({ token: response.data.token}));
 
-    }
-      
+		if( role === 'patient'){
+			window.location.assign('/patient');
+		}
+		else{
+			window.location.assign('/employee');
+		}
+	}
     catch (error) {
       if (error.response) {
 		console.log(error)
@@ -63,7 +69,7 @@ function Login() {
 			</div>
 			<div className="login-container">
 				<h1>Hospital Login</h1>
-				<form action="/dashboard" method="post">
+				<form onSubmit={handleSubmit} >
 					<select name="role" value={role} onChange={handleChange} required>
 						<option value="" disabled selected>
 							Select Role
@@ -89,12 +95,7 @@ function Login() {
 						placeholder="Password"
 						required
 					/>
-					<button
-						onClick={(e) => {
-							// Do something on button click, for now let's just redirect
-							window.location.href = "dependent.html";
-							e.preventDefault(); // Prevent form submission
-						}}
+					<button			
 						type="submit">
 						Login
 					</button>
