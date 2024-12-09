@@ -12,6 +12,9 @@ function Login() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
 
+  const [errors, setErrors] = useState([]);
+  const [showErrors, setShowErrors] = useState(false);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +32,12 @@ function Login() {
 	console.log("password",password)
 	console.log("role",role)
   };
+
+  useEffect(() => {
+    let newErrors = [];
+    setErrors(newErrors);
+    setShowErrors(true);
+  }, [username, password]);
 
 
   
@@ -48,17 +57,37 @@ function Login() {
 		if( role === 'patient'){
 			window.location.assign('/patient');
 		}
-		else{
-			window.location.assign('/employee');
+		else if( role === 'doctor'){
+			window.location.assign('/doctor');
 		}
+		else if( role === 'nurse'){
+			window.location.assign('/nurse');
+		}
+		else if( role === 'dependent'){
+			window.location.assign('/dependent');
+		}
+		else if( role === 'receptionist'){
+			window.location.assign('/receptionist');
+		}
+		else{
+			window.location.assign('/other');
+		}
+	
 	}
     catch (error) {
-      if (error.response) {
-		console.log(error)
-      }
-      else {
-        console.log("Khong ket noi dc vs server")
-      }
+		if (error.response) {
+			if (error.response.status >= 400 && error.response.status < 500) {
+			  
+			  setErrors([error.response.data]);
+			}
+			if (error.response.status === 500) {
+			  setErrors([error.response.data]);
+			}
+		  }
+		else {
+			setErrors(['Không kết nối được đến server!']);
+		}
+		setShowErrors(true);
     }
   }
 
@@ -79,6 +108,7 @@ function Login() {
 						<option value="nurse">Nurse</option>
 						<option value="doctor">Doctor</option>
 						<option value="receptionist">Receptionist</option>
+						<option value="other">Other</option>
 					</select>
 					<input 
 						type="text" 
@@ -99,6 +129,16 @@ function Login() {
 						type="submit">
 						Login
 					</button>
+
+					{showErrors && errors.length > 0 && (
+            			<div >
+              				{errors.map((error, index) => (
+                				<p key={index} >
+                  					{error}
+                				</p>
+              				))}
+            			</div>
+          			)}
 				</form>
 				<div className="footer">&copy; 2024 Hanh Phuc Hospital System</div>
 			</div>

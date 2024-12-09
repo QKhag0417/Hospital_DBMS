@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from 'axios';
 
-function Patient() {
+function Nurse() {
 	
 
 	return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
-          <h1>Đây là trang chủ cho Patient</h1>
+          <h1>Đây là trang chủ cho nurse</h1>
         </div>
       );
 	
 }
 
-export default Patient;
+export default Nurse;
