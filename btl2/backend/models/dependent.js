@@ -12,6 +12,19 @@ const getDependentbyID = async (id) => {
     }
 }
 
+const getFamily = async (id) => {
+    try {
+        const result = await database.query('SELECT * FROM userinfo WHERE username = $1', [username]);
+
+        return result.rows[0];
+
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
 module.exports = {
     getDependentbyID
 };

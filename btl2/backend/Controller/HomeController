@@ -56,13 +56,13 @@ const getUserByID = async(req, res, next) => {
             return res.status(404).send("Không có dữ liệu người dùng!");
         }
         let result;
-        if (type=='Paitent') {
+        if (type=='paitent') {
             result = await getPatientbyID(id);
         }
-        else if (type=='Dependent') {
+        else if (type=='dependent') {
             result = await getDependentbyID(id);
         }
-        else if (type=='Employee') {
+        else if (type=='doctor' || type=='nurse' || type =='other') {
             result = await getEmployeebyID(id);
         }
         else{
