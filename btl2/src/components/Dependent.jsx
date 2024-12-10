@@ -17,6 +17,213 @@ function downloadReport() {
 }
 
 function Dependent() {
+	const token = localStorage.getItem('userCredentials') ? JSON.parse(localStorage.getItem('userCredentials')).token : null;
+    const [myinfo, setMyInfo] = useState([]);
+	const [myfaimlyinfo, setMyFamilyInfo] = useState([]);
+	const [myfaimlyinfoass, setMyFamilyInfoass] = useState([]);
+	const [myfaimlyinfoexam, setMyFamilyInfoexam] = useState([]);
+	const [myfaimlyinfotreat, setMyFamilyInfotreat] = useState([]);
+	const [myfaimlyinfocare, setMyFamilyInfocare] = useState([]);
+	const [myfaimlyinfomed, setMyFamilyInfomed] = useState([]);
+	const [myfaimlyinfobill, setMyFamilyInfobill] = useState([]);
+
+	const GetMyInfo = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/userinfo', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyInfo(response.data)
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+        
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfo = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyinfo', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfo(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfoass = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyassignment', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfoass(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfoexam = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyexamination', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfoexam(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfotreat = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilytreatment', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfotreat(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfocare = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilycaretaking', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfocare(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfomed = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilymedication', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfomed(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	const GetMyFamilyInfobill = async () => {
+        try {
+            const response = await axios.post('http://localhost:3010/api/dependent/myfamilybill', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setMyFamilyInfobill(response.data)
+
+            }
+            else if (response.status === 404) {
+                window.location.assign('/');
+            }
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+	useEffect(() => {
+		GetMyInfo();
+		GetMyFamilyInfo();
+		GetMyFamilyInfoass();
+		GetMyFamilyInfoexam();
+		GetMyFamilyInfotreat();
+		GetMyFamilyInfocare();
+		GetMyFamilyInfomed();
+		GetMyFamilyInfobill();
+	
+	}, []);
+
+
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -35,7 +242,7 @@ function Dependent() {
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
-
+	console.log(myfaimlyinfo)
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -77,9 +284,9 @@ function Dependent() {
 							</thead>
 							<tbody>
 								<tr>
-									<td>Le Van A</td>
-									<td>11111111111</td>
-									<td>OP000001</td>
+									<td>{`${myinfo.fname || ''} ${myinfo.mname || ''} ${myinfo.lname}`}</td>
+									<td>{myinfo.phone_number}</td>
+									<td>{myinfo.patient_id}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -98,40 +305,28 @@ function Dependent() {
 						<table>
 							<thead>
 								<tr>
-									<th>Field</th>
-									<th>Details</th>
+									<th>Patient ID</th>
+									<th>Name</th>
+									<th>Age</th>
+									<th>Gender</th>
+									<th>Phone number</th>
+									<th>Height(m)</th>
+									<th>Weight(kg)</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>Patient ID</td>
-									<td>OP000001</td>
-								</tr>
-								<tr>
-									<td>Name</td>
-									<td>Lee Zhuc Khang</td>
-								</tr>
-
-								<tr>
-									<td>Age</td>
-									<td>20</td>
-								</tr>
-								<tr>
-									<td>Gender</td>
-									<td>Female</td>
-								</tr>
-								<tr>
-									<td>Phone number</td>
-									<td>0944957939</td>
-								</tr>
-								<tr>
-									<td>Height</td>
-									<td>1.54 m</td>
-								</tr>
-								<tr>
-									<td>Weight</td>
-									<td>78kg</td>
-								</tr>
+								{/* Duyệt qua mảng myfaimlyinfo */}
+								{myfaimlyinfo.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.patient_id}</td>
+										<td>{patient.patient_name}</td>
+										<td>{patient.patient_age}</td>
+										<td>{patient.patient_gender}</td>
+										<td>{patient.patient_phone_number}</td>
+										<td>{patient["patient_height(m)"]}</td>
+										<td>{patient["patient_weight(kg)"]}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
