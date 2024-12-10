@@ -228,7 +228,7 @@ function Dependent() {
 		window.history.back();
 	};
 
-	const [activeSection, setActiveSection] = useState("patientInfo");
+	const [activeSection, setActiveSection] = useState("myInfo");
 
 	const costData = {
 		medication: 1000000,
