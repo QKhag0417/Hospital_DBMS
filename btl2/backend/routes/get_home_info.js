@@ -5,6 +5,6 @@ const authenticate = require('../middlewares/checkToken');
 
 router.post('/login', homeController.loginUser);
 
-router.post('/', authenticate, homeController.getUserByID);
+router.post('/userinfo', authenticate, homeController.getUserByID);
 
 module.exports = router;
