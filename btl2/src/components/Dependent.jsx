@@ -46,6 +46,7 @@ function Dependent() {
 			</div>
 			<div className="sidebar">
 				<ul>
+					<li onClick={() => setActiveSection("myinfo")}>My Information</li>
 					<li onClick={() => setActiveSection("patientInfo")}>
 						Patient Information
 					</li>
@@ -63,6 +64,27 @@ function Dependent() {
 			</div>
 
 			<div className="content">
+				{activeSection === "myinfo" && (
+					<div className="container">
+						<h2>My Information</h2>
+						<table>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Phone number</th>
+									<th>Patient ID</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Le Van A</td>
+									<td>11111111111</td>
+									<td>OP000001</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				)}
 				{activeSection === "patientInfo" && (
 					<div className="container">
 						<h2>My Patient Information</h2>
