@@ -10,6 +10,9 @@ import {
 	FaStethoscope,
 	FaMoneyBillWave,
 	FaPills,
+	FaRegIdBadge,
+	FaRegHospital,
+	FaAccusoft,
 } from "react-icons/fa";
 
 function Doctor() {
@@ -17,7 +20,7 @@ function Doctor() {
 		window.history.back();
 	};
 
-	const [activeSection, setActiveSection] = useState("myinfo");
+	const [activeSection, setActiveSection] = useState("myInfo");
 
 	// Hàm xử lý tìm kiếm
 	const [search, setSearch] = useState("");
@@ -42,14 +45,16 @@ function Doctor() {
 					</li>
 					<li onClick={() => setActiveSection("examination")}>Examination</li>
 					<li onClick={() => setActiveSection("treatment")}>Treatment</li>
-					<li onClick={() => setActiveSection("careTaking")}>Specialty</li>
+					<li onClick={() => setActiveSection("specialty")}>Specialty</li>
 				</ul>
 			</div>
 
 			<div className="content">
 				{activeSection === "myInfo" && (
 					<div className="container">
-						<h2>My Information</h2>
+						<h2>
+							<FaRegIdBadge /> My Information
+						</h2>
 						<table>
 							<thead>
 								<tr>
@@ -57,20 +62,20 @@ function Doctor() {
 									<th>Name</th>
 									<th>Age</th>
 									<th>Gender</th>
-									<th>Salary</th>
-									<th>Bonus</th>
+									<th>Fixed Salary</th>
+									<th>Bonus Salary</th>
 									<th>Phone Number</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>Le Van A</td>
-									<td>11111111111</td>
-									<td>Le Van A</td>
-									<td>Le Van A</td>
-									<td>Le Van A</td>
-									<td>Le Van A</td>
-									<td>OP000001</td>
+									<td>DO0001</td>
+									<td>Tran Anh Khoa</td>
+									<td>20</td>
+									<td>Male</td>
+									<td>23,000,000VND</td>
+									<td>1,000,000 VND</td>
+									<td>0842210704</td>
 								</tr>
 							</tbody>
 						</table>
@@ -78,7 +83,9 @@ function Doctor() {
 				)}
 				{activeSection === "workingPlace" && (
 					<div className="container">
-						<h2>My Working Place</h2>
+						<h2>
+							<FaRegHospital /> My Working Place
+						</h2>
 						<input
 							type="text"
 							placeholder="Search Patient Info..."
@@ -89,39 +96,12 @@ function Doctor() {
 						<table>
 							<thead>
 								<tr>
-									<th>Field</th>
-									<th>Details</th>
+									<th>Department</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>Patient ID</td>
-									<td>OP000001</td>
-								</tr>
-								<tr>
-									<td>Name</td>
-									<td>Lee Zhuc Khang</td>
-								</tr>
-
-								<tr>
-									<td>Age</td>
-									<td>20</td>
-								</tr>
-								<tr>
-									<td>Gender</td>
-									<td>Female</td>
-								</tr>
-								<tr>
-									<td>Phone number</td>
-									<td>0944957939</td>
-								</tr>
-								<tr>
-									<td>Height</td>
-									<td>1.54 m</td>
-								</tr>
-								<tr>
-									<td>Weight</td>
-									<td>78kg</td>
+									<td>DO0001</td>
 								</tr>
 							</tbody>
 						</table>
@@ -136,8 +116,9 @@ function Doctor() {
 						<table>
 							<thead>
 								<tr>
-									<th>Doctor ID</th>
-									<th>Doctor Name</th>
+									<th>Outpatient ID</th>
+									<th>Patient name</th>
+									<th>Dependent Phone Number</th>
 									<th>Diagnosis</th>
 									<th>Examination Date</th>
 									<th>Next Examination Date</th>
@@ -148,6 +129,7 @@ function Doctor() {
 								<tr>
 									<td>DO0001</td>
 									<td>Tran Anh Khoa</td>
+									<td>DO0001</td>
 									<td>Cancer</td>
 									<td>2024-12-6</td>
 									<td>2050-12-6</td>
@@ -165,8 +147,8 @@ function Doctor() {
 						</h2>
 						<table>
 							<tr>
-								<th>Doctor ID</th>
-								<th>Doctor Name</th>
+								<th>Inpatient ID</th>
+								<th>Dependent Phone Number</th>
 								<th>Admission Date</th>
 								<th>Discharge Date</th>
 								<th>Result</th>
@@ -182,21 +164,17 @@ function Doctor() {
 					</div>
 				)}
 
-				{activeSection === "careTaking" && (
+				{activeSection === "specialty" && (
 					<div class="container">
 						<h2>
-							<FaMoneyBillWave /> Care-taking
+							<FaAccusoft /> Specialty
 						</h2>
 						<table>
 							<tr>
-								<th>Bill ID</th>
-								<th>Amount</th>
-								<th>Date</th>
+								<th>My speciaty(ies)</th>
 							</tr>
 							<tr>
 								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
 							</tr>
 						</table>
 					</div>
