@@ -190,7 +190,7 @@
 
 /* Container */
 .container {
-	max-width: 950px; /* Giới hạn chiều rộng */
+	max-width: 1010px; /* Giới hạn chiều rộng */
 	margin: 0 auto 30px auto; /* Canh giữa và cách đều các container */
 	background-color: white;
 	border-radius: 10px;
@@ -253,8 +253,8 @@ td:first-child {
 .ads {
 	position: absolute;
 	top: 100px;
-	right: 20px;
-	width: 250px;
+	right: 10px;
+	width: 200px;
 	padding: 20px;
 	background: linear-gradient(
 		135deg,
