@@ -1,11 +1,10 @@
 CREATE TABLE USERINFO (
     Username VARCHAR(50) NOT NULL,
     Password VARCHAR(255) NOT NULL,
-    ID VARCHAR(10) NOT NULL,
+    ID VARCHAR(100) NOT NULL,
     Type VARCHAR(20) NOT NULL, 
     PRIMARY KEY (Username, Password)
 );
-
 
 CREATE TABLE Patient (
     Patient_ID VARCHAR(10) 			PRIMARY KEY,
