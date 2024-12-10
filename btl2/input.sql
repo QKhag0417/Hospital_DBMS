@@ -26,21 +26,14 @@ VALUES
 ('nguyenvan_i', 'testpass', 'OT0009', 'other'),
 ('hoangviet_h', 'hellopass', 'DO0011', 'doctor'),
 ('mai_loan', 'finalkey', 'NU0012', 'nurse'),
-('dep_nguyenva1', 'newpass123', 'OP000001', 'dependent'),
+('dep_nguyenva1', 'newpass123', 'OP000001 IP000003', 'dependent'),
 ('dep_tranthib2', 'mypass789', 'OP000002', 'dependent'),
-('dep_levanc3', 'secureKey', 'IP000003', 'dependent'),
 ('dep_phamthid4', 'worldHello', 'OP000004', 'dependent'),
 ('dep_hoangvan5', 'keySecure', 'IP000005', 'dependent'),
 ('dep_vuthil6', '123random', 'OP000006', 'dependent'),
 ('dep_dovanm7', 'passTest', 'IP000007', 'dependent'),
-('dep_buithin8', 'PwdExample', 'OP000008', 'dependent'),
+('dep_buithin8', 'PwdExample', 'OP000008 IP000014', 'dependent'),
 ('dep_nguyenvp9', 'abc98765', 'IP000009', 'dependent'),
-('dep_phamthiq10', 'KeySecure', 'OP000010', 'dependent'),
-('dep_nguyenth11', 'StrongP@ss', 'OP000011', 'dependent'),
-('dep_tranngcb12', 'PassUnique', 'IP000012', 'dependent'),
-('dep_phamvanh13', 'uiqwerty', 'OP000013', 'dependent'),
-('dep_lethikl14', 'PwdSecret', 'IP000014', 'dependent'),
-('dep_hoangnhmq15', 'P@ssword2', 'OP000015', 'dependent'),
 ('recep', 'recep', 'RECEP', 'receptionist');
 
 
