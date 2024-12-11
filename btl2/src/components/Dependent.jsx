@@ -30,6 +30,9 @@ function Dependent() {
 	const [myfaimlyinfocare, setMyFamilyInfocare] = useState([]);
 	const [myfaimlyinfomed, setMyFamilyInfomed] = useState([]);
 	const [myfaimlyinfobill, setMyFamilyInfobill] = useState([]);
+	const [sumMed, setSumMed] = useState(0);
+	const [sumBill, setSumBill] = useState(0);
+	const [sumExam, setSumExam] = useState(0);
 
 	const GetMyInfo = async () => {
 		try {
@@ -207,6 +210,11 @@ function Dependent() {
 		}
 	};
 
+	const calculateSum = (dataArray, columnName) => {
+		return dataArray.reduce((sum, item) => sum + parseFloat(item[columnName] || 0), 0);
+	};
+	
+
 	useEffect(() => {
 		GetMyInfo();
 		GetMyFamilyInfo();
@@ -218,17 +226,27 @@ function Dependent() {
 		GetMyFamilyInfobill();
 	}, []);
 
+	useEffect(() => {
+		const total = calculateSum(myfaimlyinfomed, 'Price(VND)');
+		setSumMed(total);
+	}, [myfaimlyinfomed]); 
+
+	useEffect(() => {
+		const total = calculateSum(myfaimlyinfobill, 'Total_price(VND)');
+		setSumBill(total);
+	}, [myfaimlyinfobill]); 
+
+	useEffect(() => {
+		const total = calculateSum(myfaimlyinfoexam, 'Fee(VND)');
+		setSumExam(total);
+	}, [myfaimlyinfoexam]); 
+
 	const goBack = () => {
 		window.history.back();
 	};
 
 	const [activeSection, setActiveSection] = useState("myinfo");
 
-	const costData = {
-		medication: 1000000,
-		careTaking: 500000,
-		examination: 2000000,
-	};
 
 	// Hàm xử lý tìm kiếm
 	const [search, setSearch] = useState("");
@@ -236,7 +254,9 @@ function Dependent() {
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
+
 	console.log(myfaimlyinfo);
+  
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -315,7 +335,6 @@ function Dependent() {
 								</tr>
 							</thead>
 							<tbody>
-								{/* Duyệt qua mảng myfaimlyinfo */}
 								{myfaimlyinfo.map((patient, index) => (
 									<tr key={index}>
 										<td>{patient.patient_id}</td>
@@ -348,13 +367,14 @@ function Dependent() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>303</td>
-									<td>303</td>
-									<td>303</td>
-									<td>A</td>
-									<td>Treatment</td>
-								</tr>
+
+								{myfaimlyinfoass.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.room}</td>
+										<td>{patient.deparment}</td>
+										<td>{patient.purpose}</td>
+									</tr>
+								))}     
 							</tbody>
 						</table>
 					</div>
@@ -379,16 +399,18 @@ function Dependent() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>Cancer</td>
-									<td>2024-12-6</td>
-									<td>2050-12-6</td>
-									<td>1,000,000 VND</td>
-								</tr>
+								{myfaimlyinfoexam.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.doctor_id}</td>
+										<td>{patient.doctor_name}</td>
+										<td>{patient.diagnosis}</td>
+										<td>{patient.diagnosis}</td>
+										<td>{patient.examination_date}</td>
+										<td>{patient.next_examination}</td>
+										<td>{patient.fee}</td>
+									</tr>
+								))}
+                
 							</tbody>
 						</table>
 					</div>
@@ -400,24 +422,26 @@ function Dependent() {
 							<FaStethoscope /> Treatment
 						</h2>
 						<table>
-							<tr>
-								<th>Patient ID</th>
-								<th>Patient Name</th>
-								<th>Doctor ID</th>
-								<th>Doctor Name</th>
-								<th>Admission Date</th>
-								<th>Discharge Date</th>
-								<th>Result</th>
-							</tr>
-							<tr>
-								<td>DO0001</td>
-								<td>DO0001</td>
-								<td>DO0001</td>
-								<td>Tran Anh Khoa</td>
-								<td>2024-12-6</td>
-								<td>2050-12-6</td>
-								<td>Success</td>
-							</tr>
+							<thead>
+								<tr>
+									<th>Doctor ID</th>
+									<th>Doctor Name</th>
+									<th>Admission Date</th>
+									<th>Discharge Date</th>
+									<th>Result</th>
+								</tr>
+							</thead>
+							<tbody>
+								{myfaimlyinfotreat.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.doctor_id}</td>
+										<td>{patient.doctor_name}</td>
+										<td>{patient.admission_date}</td>
+										<td>{patient.discharge_date}</td>
+										<td>{patient.result}</td>
+									</tr>
+								))}
+							</tbody>
 						</table>
 					</div>
 				)}
@@ -428,18 +452,21 @@ function Dependent() {
 							<FaUserNurse /> Care-taking
 						</h2>
 						<table>
-							<tr>
-								<th>Patient ID</th>
-								<th>Patient Name</th>
-								<th>Nurse ID</th>
-								<th>Nurse Name</th>
-							</tr>
-							<tr>
-								<td>B001</td>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+
+							<thead>
+								<tr>
+									<th>Nurse ID</th>
+									<th>Nurse Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								{myfaimlyinfocare.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.nurse_id}</td>
+										<td>{patient.nurse_name}</td>
+									</tr>
+									))}
+							</tbody>
 						</table>
 					</div>
 				)}
@@ -450,24 +477,26 @@ function Dependent() {
 							<FaPills /> Medication
 						</h2>
 						<table>
+						<thead>
 							<tr>
-								<th>Patient ID</th>
-								<th>Patient Name</th>
 								<th>Medication ID</th>
 								<th>Medication Name</th>
-								<th>Price</th>
+								<th>Price(VND)</th>
 								<th>Effect</th>
-								<th>Expired Date</th>
+								<th>Expired date</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+						</thead>
+						<tbody>
+							{myfaimlyinfomed.map((patient, index) => (
+								<tr key={index}>
+									<td>{patient.medication_id}</td>
+									<td>{patient.medication_name}</td>
+									<td>{patient["Price(VND)"]}</td>
+									<td>{patient.effect}</td>
+									<td>{patient.expired_date}</td>
+								</tr>
+							))}
+						</tbody>
 						</table>
 					</div>
 				)}
@@ -478,6 +507,7 @@ function Dependent() {
 							<FaMoneyBillWave /> Bill
 						</h2>
 						<table>
+						<thead>
 							<tr>
 								<th>Patient ID</th>
 								<th>Patient Name</th>
@@ -485,13 +515,16 @@ function Dependent() {
 								<th>Date</th>
 								<th>Total Price(VND)</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+						</thead>
+						<tbody>
+							{myfaimlyinfobill.map((patient, index) => (
+								<tr key={index}>
+									<td>{patient.bill_id}</td>
+									<td>{patient["Total_price(VND)"]}</td>
+									<td>{patient.date}</td>
+								</tr>
+							))}
+						</tbody>
 						</table>
 					</div>
 				)}
@@ -500,9 +533,9 @@ function Dependent() {
 					<div className="container">
 						<h2>Cost Statistics</h2>
 						<div>
-							<p>Total Medication Cost: {costData.medication} VND</p>
-							<p>Total Care-taking Cost: {costData.careTaking} VND</p>
-							<p>Total Examination Cost: {costData.examination} VND</p>
+							<p>Total Medication Cost: {sumMed} VND</p>
+							<p>Total Bill Cost: {sumBill} VND</p>
+							<p>Total Examination Cost: {sumExam} VND</p>
 						</div>
 						<button className="download-button" onClick={downloadReport}>
 							Download PDF Report
