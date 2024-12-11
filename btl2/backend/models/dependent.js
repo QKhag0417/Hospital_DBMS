@@ -91,7 +91,8 @@ const getFamilyExamination = async (id) => {
             r.fname || ' ' || r.mname || ' ' || r.lname AS doctor_name,
             t.diagnosis AS diagnosis,
             TO_CHAR(t.examination_date, 'DD/MM/YYYY') AS examnination_date,
-            TO_CHAR(t.next_examination, 'DD/MM/YYYY') AS next_examnination
+            TO_CHAR(t.next_examination, 'DD/MM/YYYY') AS next_examnination,
+            t."Fee(VND)" AS "Fee(VND)"
         FROM
             examination t
         JOIN 
