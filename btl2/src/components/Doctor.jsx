@@ -13,6 +13,7 @@ import {
 	FaRegIdBadge,
 	FaRegHospital,
 	FaAccusoft,
+	Fa500Px,
 } from "react-icons/fa";
 
 function Doctor() {
@@ -39,7 +40,7 @@ function Doctor() {
 			</div>
 			<div className="sidebar">
 				<ul>
-					<li onClick={() => setActiveSection("myInfo")}>My Information</li>
+					<li onClick={() => setActiveSection("myInfo")}> My Information</li>
 					<li onClick={() => setActiveSection("workingPlace")}>
 						My Working Place
 					</li>
@@ -86,13 +87,13 @@ function Doctor() {
 						<h2>
 							<FaRegHospital /> My Working Place
 						</h2>
-						<input
+						{/* <input
 							type="text"
 							placeholder="Search Patient Info..."
 							value={search}
 							onChange={handleSearch}
 							className="search-bar"
-						/>
+						/> */}
 						<table>
 							<thead>
 								<tr>
@@ -118,6 +119,7 @@ function Doctor() {
 								<tr>
 									<th>Outpatient ID</th>
 									<th>Patient name</th>
+									<th>Dependent name</th>
 									<th>Dependent Phone Number</th>
 									<th>Diagnosis</th>
 									<th>Examination Date</th>
@@ -128,6 +130,7 @@ function Doctor() {
 							<tbody>
 								<tr>
 									<td>DO0001</td>
+									<td>Tran Anh Khoa</td>
 									<td>Tran Anh Khoa</td>
 									<td>DO0001</td>
 									<td>Cancer</td>
@@ -148,6 +151,8 @@ function Doctor() {
 						<table>
 							<tr>
 								<th>Inpatient ID</th>
+								<th>Inpatient Name</th>
+								<th>Dependent Name</th>
 								<th>Dependent Phone Number</th>
 								<th>Admission Date</th>
 								<th>Discharge Date</th>
