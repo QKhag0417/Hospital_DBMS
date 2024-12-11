@@ -9,6 +9,8 @@ import {
 	FaStethoscope,
 	FaMoneyBillWave,
 	FaPills,
+	FaRegIdBadge,
+	FaUserNurse,
 } from "react-icons/fa";
 import "./Dependent.css";
 
@@ -17,8 +19,10 @@ function downloadReport() {
 }
 
 function Dependent() {
-	const token = localStorage.getItem('userCredentials') ? JSON.parse(localStorage.getItem('userCredentials')).token : null;
-    const [myinfo, setMyInfo] = useState([]);
+	const token = localStorage.getItem("userCredentials")
+		? JSON.parse(localStorage.getItem("userCredentials")).token
+		: null;
+	const [myinfo, setMyInfo] = useState([]);
 	const [myfaimlyinfo, setMyFamilyInfo] = useState([]);
 	const [myfaimlyinfoass, setMyFamilyInfoass] = useState([]);
 	const [myfaimlyinfoexam, setMyFamilyInfoexam] = useState([]);
@@ -28,187 +32,180 @@ function Dependent() {
 	const [myfaimlyinfobill, setMyFamilyInfobill] = useState([]);
 
 	const GetMyInfo = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/userinfo', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyInfo(response.data)
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-        
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/userinfo",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfo(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfo = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyinfo', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfo(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilyinfo",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfo(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfoass = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyassignment', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfoass(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilyassignment",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfoass(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfoexam = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilyexamination', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfoexam(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilyexamination",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfoexam(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfotreat = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilytreatment', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfotreat(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilytreatment",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfotreat(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfocare = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilycaretaking', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfocare(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilycaretaking",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfocare(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfomed = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilymedication', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfomed(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilymedication",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfomed(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const GetMyFamilyInfobill = async () => {
-        try {
-            const response = await axios.post('http://localhost:3010/api/dependent/myfamilybill', {}, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setMyFamilyInfobill(response.data)
-
-            }
-            else if (response.status === 404) {
-                window.location.assign('/');
-            }
-
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/dependent/myfamilybill",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyFamilyInfobill(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
 		GetMyInfo();
@@ -219,16 +216,13 @@ function Dependent() {
 		GetMyFamilyInfocare();
 		GetMyFamilyInfomed();
 		GetMyFamilyInfobill();
-	
 	}, []);
-
-
 
 	const goBack = () => {
 		window.history.back();
 	};
 
-	const [activeSection, setActiveSection] = useState("myInfo");
+	const [activeSection, setActiveSection] = useState("myinfo");
 
 	const costData = {
 		medication: 1000000,
@@ -242,7 +236,7 @@ function Dependent() {
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
-	console.log(myfaimlyinfo)
+	console.log(myfaimlyinfo);
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -265,15 +259,17 @@ function Dependent() {
 					<li onClick={() => setActiveSection("careTaking")}>Care-taking</li>
 					<li onClick={() => setActiveSection("medication")}>Medication</li>
 					<li onClick={() => setActiveSection("bill")}>Bill</li>
-					<li onClick={() => setActiveSection("costStats")}>Cost Statistics</li>
-					<li onClick={() => setActiveSection("reminder")}>Reminder</li>
+					{/* <li onClick={() => setActiveSection("costStats")}>Cost Statistics</li>
+					<li onClick={() => setActiveSection("reminder")}>Reminder</li> */}
 				</ul>
 			</div>
 
 			<div className="content">
 				{activeSection === "myinfo" && (
 					<div className="container">
-						<h2>My Information</h2>
+						<h2>
+							<FaRegIdBadge /> My Information
+						</h2>
 						<table>
 							<thead>
 								<tr>
@@ -284,7 +280,9 @@ function Dependent() {
 							</thead>
 							<tbody>
 								<tr>
-									<td>{`${myinfo.fname || ''} ${myinfo.mname || ''} ${myinfo.lname}`}</td>
+									<td>{`${myinfo.fname || ""} ${myinfo.mname || ""} ${
+										myinfo.lname
+									}`}</td>
 									<td>{myinfo.phone_number}</td>
 									<td>{myinfo.patient_id}</td>
 								</tr>
@@ -294,14 +292,16 @@ function Dependent() {
 				)}
 				{activeSection === "patientInfo" && (
 					<div className="container">
-						<h2>My Patient Information</h2>
-						<input
+						<h2>
+							<FaRegIdBadge /> My Patient Information
+						</h2>
+						{/* <input
 							type="text"
 							placeholder="Search Patient Info..."
 							value={search}
 							onChange={handleSearch}
 							className="search-bar"
-						/>
+						/> */}
 						<table>
 							<thead>
 								<tr>
@@ -340,6 +340,8 @@ function Dependent() {
 						<table>
 							<thead>
 								<tr>
+									<th>Patient ID</th>
+									<th>Patient Name</th>
 									<th>Room number</th>
 									<th>Department</th>
 									<th>Purpose</th>
@@ -347,6 +349,8 @@ function Dependent() {
 							</thead>
 							<tbody>
 								<tr>
+									<td>303</td>
+									<td>303</td>
 									<td>303</td>
 									<td>A</td>
 									<td>Treatment</td>
@@ -364,6 +368,8 @@ function Dependent() {
 						<table>
 							<thead>
 								<tr>
+									<th>Patient ID</th>
+									<th>Patient Name</th>
 									<th>Doctor ID</th>
 									<th>Doctor Name</th>
 									<th>Diagnosis</th>
@@ -374,6 +380,8 @@ function Dependent() {
 							</thead>
 							<tbody>
 								<tr>
+									<td>DO0001</td>
+									<td>DO0001</td>
 									<td>DO0001</td>
 									<td>Tran Anh Khoa</td>
 									<td>Cancer</td>
@@ -393,6 +401,8 @@ function Dependent() {
 						</h2>
 						<table>
 							<tr>
+								<th>Patient ID</th>
+								<th>Patient Name</th>
 								<th>Doctor ID</th>
 								<th>Doctor Name</th>
 								<th>Admission Date</th>
@@ -400,6 +410,8 @@ function Dependent() {
 								<th>Result</th>
 							</tr>
 							<tr>
+								<td>DO0001</td>
+								<td>DO0001</td>
 								<td>DO0001</td>
 								<td>Tran Anh Khoa</td>
 								<td>2024-12-6</td>
@@ -413,15 +425,17 @@ function Dependent() {
 				{activeSection === "careTaking" && (
 					<div class="container">
 						<h2>
-							<FaMoneyBillWave /> Care-taking
+							<FaUserNurse /> Care-taking
 						</h2>
 						<table>
 							<tr>
-								<th>Bill ID</th>
-								<th>Amount</th>
-								<th>Date</th>
+								<th>Patient ID</th>
+								<th>Patient Name</th>
+								<th>Nurse ID</th>
+								<th>Nurse Name</th>
 							</tr>
 							<tr>
+								<td>B001</td>
 								<td>B001</td>
 								<td>1,000,000 VND</td>
 								<td>2024-11-30</td>
@@ -437,11 +451,19 @@ function Dependent() {
 						</h2>
 						<table>
 							<tr>
-								<th>Bill ID</th>
-								<th>Amount</th>
-								<th>Date</th>
+								<th>Patient ID</th>
+								<th>Patient Name</th>
+								<th>Medication ID</th>
+								<th>Medication Name</th>
+								<th>Price</th>
+								<th>Effect</th>
+								<th>Expired Date</th>
 							</tr>
 							<tr>
+								<td>B001</td>
+								<td>B001</td>
+								<td>B001</td>
+								<td>B001</td>
 								<td>B001</td>
 								<td>1,000,000 VND</td>
 								<td>2024-11-30</td>
@@ -452,14 +474,20 @@ function Dependent() {
 
 				{activeSection === "bill" && (
 					<div class="container">
-						<h2>Bill</h2>
+						<h2>
+							<FaMoneyBillWave /> Bill
+						</h2>
 						<table>
 							<tr>
+								<th>Patient ID</th>
+								<th>Patient Name</th>
 								<th>Bill ID</th>
-								<th>Amount</th>
 								<th>Date</th>
+								<th>Total Price(VND)</th>
 							</tr>
 							<tr>
+								<td>B001</td>
+								<td>B001</td>
 								<td>B001</td>
 								<td>1,000,000 VND</td>
 								<td>2024-11-30</td>
