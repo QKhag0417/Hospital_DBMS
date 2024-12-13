@@ -17,6 +17,135 @@ import {
 } from "react-icons/fa";
 
 function Doctor() {
+	const token = localStorage.getItem("userCredentials")
+		? JSON.parse(localStorage.getItem("userCredentials")).token
+		: null;
+	const [myinfo, setMyInfo] = useState([]);
+	const [myinfoass, setMyInfoass] = useState([]);
+	const [myinfoexam, setMyInfoexam] = useState([]);
+	const [myinfotreat, setMyInfotreat] = useState([]);
+	const [myinfospec, setMyInfospecialty] = useState([]);
+	
+
+	const GetMyInfo = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/doctor/info",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfo(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfoWork = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/doctor/workplace",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfoass(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfoexam = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/doctor/examination",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfoexam(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfotreat = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/doctor/treatment",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfotreat(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfospecialty = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/doctor/specialty",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfospecialty(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+
+	useEffect(() => {
+		GetMyInfo();
+		GetMyInfoWork();
+		GetMyInfoexam();
+		GetMyInfotreat();
+		GetMyInfospecialty();
+	}, []);
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -29,7 +158,6 @@ function Doctor() {
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
-
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -66,18 +194,24 @@ function Doctor() {
 									<th>Fixed Salary</th>
 									<th>Bonus Salary</th>
 									<th>Phone Number</th>
+									<th>Experience year</th>
+									<th>Working hour</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>20</td>
-									<td>Male</td>
-									<td>23,000,000VND</td>
-									<td>1,000,000 VND</td>
-									<td>0842210704</td>
-								</tr>
+								{myinfo.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.employee_id}</td>
+											<td>{doctor.name}</td>
+											<td>{doctor.age}</td>
+											<td>{doctor.gender}</td>
+											<td>{doctor['Fixed_Salary(VND)']}</td>
+											<td>{doctor['Bonus(VND)']}</td>
+											<td>{doctor.phone_number}</td>
+											<td>{doctor.experience_year}</td>
+											<td>{doctor.working_hour}</td>
+										</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -101,9 +235,11 @@ function Doctor() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-								</tr>
+								{myinfoass.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.department}</td>
+										</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -128,16 +264,18 @@ function Doctor() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>Tran Anh Khoa</td>
-									<td>DO0001</td>
-									<td>Cancer</td>
-									<td>2024-12-6</td>
-									<td>2050-12-6</td>
-									<td>1,000,000 VND</td>
-								</tr>
+								{myinfoexam.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.patient_id}</td>
+											<td>{doctor.patient_name}</td>
+											<td>{doctor.dependent_name}</td>
+											<td>{doctor.dependent_phone_number}</td>
+											<td>{doctor.diagnosis}</td>
+											<td>{doctor.examnination_date}</td>
+											<td>{doctor.next_examnination}</td>
+											<td>{doctor['Fee(VND)']}</td>
+										</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -158,13 +296,17 @@ function Doctor() {
 								<th>Discharge Date</th>
 								<th>Result</th>
 							</tr>
-							<tr>
-								<td>DO0001</td>
-								<td>Tran Anh Khoa</td>
-								<td>2024-12-6</td>
-								<td>2050-12-6</td>
-								<td>Success</td>
-							</tr>
+								{myinfotreat.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.patient_id}</td>
+											<td>{doctor.patient_name}</td>
+											<td>{doctor.dependent_name}</td>
+											<td>{doctor.dependent_phone_number}</td>
+											<td>{doctor.admission_date}</td>
+											<td>{doctor.discharge_date}</td>
+											<td>{doctor.result}</td>
+										</tr>
+								))}
 						</table>
 					</div>
 				)}
@@ -178,9 +320,11 @@ function Doctor() {
 							<tr>
 								<th>My speciaty(ies)</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-							</tr>
+								{myinfospec.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.specialty}</td>
+										</tr>
+								))}
 						</table>
 					</div>
 				)}
