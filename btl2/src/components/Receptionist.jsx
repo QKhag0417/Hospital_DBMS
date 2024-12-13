@@ -18,7 +18,7 @@ import {
 import "./Dependent.css";
 
 function Receptionist() {
-
+	const [errorMessage, setErrorMessage] = useState("");
 	const [patient, setPatient] = useState([]);
 	const [assignment, setAssignment] = useState([]);
 	const [exam, setexam] = useState([]);
@@ -428,13 +428,15 @@ function Receptionist() {
 	};
 
 	///////////////////////////////////////////////////////////////
-	const [patientId, setPatientId] = useState(""); // Trạng thái lưu ID nhập vào
+	const [patientId, setdeletedPatientId] = useState(""); // Trạng thái lưu ID nhập vào
 
 	const handleDeleteRecord = () => {
 		if (!patientId) {
 			alert("Please enter a Patient ID.");
 			return;
 		}
+		
+		dPatient(patientId)
 
 		console.log("Attempting to delete record with ID:", patientId);
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
@@ -448,31 +450,56 @@ function Receptionist() {
 			alert("Please enter both Room and Department to proceed.");
 			return;
 		}
-
+		
 		console.log(
 			"Attempting to delete record with Room:",
 			room,
 			"and Department:",
 			department
 		);
+		const deleteData = {
+			room,
+			department,
+		};
+		dRoom(deleteData)
 
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
 	};
-
-	///////////////////////////////////////////////////////////////
-	const [doctorId, setDoctorId] = useState(""); // Trạng thái lưu Doctor ID được nhập
-
-	const handleDeleteDoctorRecord = () => {
-		if (!doctorId) {
+	////////////////////////////////////////////////////////////////
+	const [examdoctorId, setexamDoctorId] = useState(""); // Trạng thái lưu Doctor ID được nhập
+	const [exampatientId, setexamPatientId] = useState("");
+	const handleDeleteExamRecord = () => {
+		if (!examdoctorId ||!exampatientId ) {
 			alert("Please enter a Doctor ID.");
 			return;
 		}
 
-		console.log("Attempting to delete doctor record with ID:", doctorId);
+		console.log("Attempting to delete doctor record with ID:", examdoctorId);
+		const deleteData = {
+			examdoctorId,
+			exampatientId,
+		};
+		dExam(deleteData)
+	};
+	///////////////////////////////////////////////////////////////
+	const [treatdoctorId, settreatDoctorId] = useState(""); // Trạng thái lưu Doctor ID được nhập
+	const [treatpatientId, settreatPatientId] = useState("");
+	const handleDeleteDoctorRecord = () => {
+		if (!treatdoctorId ||!treatpatientId ) {
+			alert("Please enter a Doctor ID.");
+			return;
+		}
+
+		console.log("Attempting to delete doctor record with ID:", treatdoctorId);
+		const deleteData = {
+			treatdoctorId,
+			treatpatientId,
+		};
+		dTreatment(deleteData)
 	};
 	////////////////////////////////////////////////////////////////
 	const [nurseId, setNurseId] = useState(""); // Trạng thái lưu Nurse ID
-
+	const [carepatientId, setcarePatientId] = useState("");
 	const handleDeleteNurse = () => {
 		if (!nurseId) {
 			alert("Please enter a valid Nurse ID to proceed.");
@@ -480,7 +507,11 @@ function Receptionist() {
 		}
 
 		console.log("Attempting to delete record with Nurse ID:", nurseId);
-
+		const deleteData = {
+			nurseId,
+			carepatientId,
+		};
+		dCare(deleteData)
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
 	};
 	///////////////////////////////////////////////////////////////
@@ -496,6 +527,7 @@ function Receptionist() {
 			"Attempting to delete record with Medication ID:",
 			medicationId
 		);
+		dMed(medicationId)
 
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
 	};
@@ -509,20 +541,41 @@ function Receptionist() {
 		}
 
 		console.log("Attempting to delete record with Bill ID:", billId);
-
+		dBill(billId)
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
 	};
 	///////////////////////////////////////////////////////////////
-	const [specialty, setSpecialty] = useState(""); // Trạng thái lưu Specialty
-
-	const handleDeleteSpecialty = () => {
-		if (!specialty) {
+	const [deleteworkdoctor, setdeleteworkdoctor] = useState(""); // Trạng thái lưu Specialty
+	const [deleteworkdepartment, setdeleteworkdepartment] = useState("");
+	const handleDeleteWork = () => {
+		if (!deleteworkdoctor) {
 			alert("Please enter a valid Specialty to proceed.");
 			return;
 		}
 
-		console.log("Attempting to delete record with Specialty:", specialty);
+		console.log("Attempting to delete record with Specialty:", deleteworkdoctor,deleteworkdepartment);
+		const deleteData = {
+			deleteworkdoctor,
+			deleteworkdepartment,
+		};
+		dWork(deleteData)
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+	////////////////////////////////////////////////////////////
+	const [deletespecialty, setdeletedSpecialty] = useState(""); // Trạng thái lưu Specialty
+	const [specdoctorid, setspecdoctorid] = useState("");
+	const handleDeleteSpecialty = () => {
+		if (!deletespecialty) {
+			alert("Please enter a valid Specialty to proceed.");
+			return;
+		}
 
+		console.log("Attempting to delete record with Specialty:", deletespecialty,specdoctorid);
+		const deleteData = {
+			deletespecialty,
+			specdoctorid,
+		};
+		dSpec(deleteData)
 		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
 	};
 
@@ -539,6 +592,10 @@ function Receptionist() {
 			}
 		} catch (error) {
 			console.log(error);
+			if (error.response && error.response.status === 500) {
+				setErrorMessage("Không hợp lệ");
+			}
+			
 		}
     };
 	const addRoom = async (newOne) => {
@@ -649,8 +706,9 @@ function Receptionist() {
 	
 	const dPatient = async (newOne) => {
 		try {
-			const response = await axios.post('http://localhost:3010/api/recep/deletepatient', newOne);
-
+			const dataToSend = { patient_id: newOne };
+			const response = await axios.post('http://localhost:3010/api/recep/deletepatient', dataToSend);
+			
 			if (response.status === 201) {
 				console.log('xoa thành công:');
 			} else if (response.status === 404) {
@@ -714,7 +772,8 @@ function Receptionist() {
     };
 	const dMed = async (newOne) => {
 		try {
-			const response = await axios.post('http://localhost:3010/api/recep/deletemed', newOne);
+			const dataToSend = { med_id: newOne };
+			const response = await axios.post('http://localhost:3010/api/recep/deletemed', dataToSend);
 
 			if (response.status === 201) {
 				console.log('xoa thành công:');
@@ -727,7 +786,8 @@ function Receptionist() {
     };
 	const dBill = async (newOne) => {
 		try {
-			const response = await axios.post('http://localhost:3010/api/recep/deletebill', newOne);
+			const dataToSend = { bill_id: newOne };
+			const response = await axios.post('http://localhost:3010/api/recep/deletebill', dataToSend);
 
 			if (response.status === 201) {
 				console.log('xoa thành công:');
@@ -754,7 +814,7 @@ function Receptionist() {
 	const dSpec = async (newOne) => {
 		try {
 			const response = await axios.post('http://localhost:3010/api/recep/deletespecialty', newOne);
-
+			
 			if (response.status === 201) {
 				console.log('xoa thành công:');
 			} else if (response.status === 404) {
@@ -917,7 +977,7 @@ function Receptionist() {
 									placeholder="Enter ID to delete"
 									className="input-delete"
 									value={patientId}
-									onChange={(e) => setPatientId(e.target.value)}
+									onChange={(e) => setdeletedPatientId(e.target.value)}
 								/>
 							</div>
 							<button
@@ -1126,15 +1186,28 @@ function Receptionist() {
 						<br />
 						<h3>Delete Record</h3>
 						<form>
-							<div className="form-group">
+						<div className="form-group">
 								<label>Enter Doctor ID to Delete</label>
 								<input
 									type="text"
 									placeholder="Enter Doctor ID to delete"
 									className="input-delete"
+									value={examdoctorId}
+									onChange={(e) => setexamDoctorId(e.target.value)}
+								/>
+								<input
+									type="text"
+									placeholder="Enter Patient ID to delete"
+									className="input-delete"
+									value={exampatientId}
+									onChange={(e) => setexamPatientId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteExamRecord}>
 								Delete Record
 							</button>
 						</form>
@@ -1228,10 +1301,18 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Doctor ID to delete"
 									className="input-delete"
-									value={doctorId}
-									onChange={(e) => setDoctorId(e.target.value)}
+									value={treatdoctorId}
+									onChange={(e) => settreatDoctorId(e.target.value)}
+								/>
+								<input
+									type="text"
+									placeholder="Enter Patient ID to delete"
+									className="input-delete"
+									value={treatpatientId}
+									onChange={(e) => settreatPatientId(e.target.value)}
 								/>
 							</div>
+							
 							<button
 								type="button"
 								className="delete-button"
@@ -1296,6 +1377,13 @@ function Receptionist() {
 									className="input-delete"
 									value={nurseId}
 									onChange={(e) => setNurseId(e.target.value)}
+								/>
+								<input
+									type="text"
+									placeholder="Enter Patient ID to delete"
+									className="input-delete"
+									value={carepatientId}
+									onChange={(e) => setcarePatientId(e.target.value)}
 								/>
 							</div>
 							<button
@@ -1485,9 +1573,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Bill ID to delete "
 									className="input-delete"
+									value={billId}
+									onChange={(e) => setBillId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteBill}>
 								Delete Record
 							</button>
 						</form>
@@ -1552,20 +1645,27 @@ function Receptionist() {
 						<br />
 						<h3>Delete Record</h3>
 						<form>
-							<div className="form-group">
-								<label>Enter Department to Delete</label>
+						<div className="form-group">
+							<label>Enter Employee ID to Delete</label>
 								<input
 									type="text"
-									placeholder="Enter Department to delete "
+									placeholder="Enter Employee ID to delete"
 									className="input-delete"
-									value={billId}
-									onChange={(e) => setBillId(e.target.value)}
+									value={deleteworkdoctor}
+									onChange={(e) => setdeleteworkdoctor(e.target.value)}
+								/>
+								<input
+									type="text"
+									placeholder="Enter Department to delete"
+									className="input-delete"
+									value={deleteworkdepartment}
+									onChange={(e) => setdeleteworkdepartment(e.target.value)}
 								/>
 							</div>
 							<button
 								type="button"
 								className="delete-button"
-								onClick={handleDeleteBill}>
+								onClick={handleDeleteWork}>
 								Delete Record
 							</button>
 						</form>
@@ -1619,14 +1719,21 @@ function Receptionist() {
 						<br />
 						<h3>Delete Record</h3>
 						<form>
-							<div className="form-group">
-								<label>Enter Specialty to Delete</label>
+						<div className="form-group">
+							<label>Enter Doctor ID to Delete</label>
 								<input
 									type="text"
-									placeholder="Enter Specialty to delete "
+									placeholder="Enter Doctor ID to delete"
 									className="input-delete"
-									value={specialty}
-									onChange={(e) => setSpecialty(e.target.value)}
+									value={specdoctorid}
+									onChange={(e) => setspecdoctorid(e.target.value)}
+								/>
+								<input
+									type="text"
+									placeholder="Enter Specialty to delete"
+									className="input-delete"
+									value={deletespecialty}
+									onChange={(e) => setdeletedSpecialty(e.target.value)}
 								/>
 							</div>
 							<button
