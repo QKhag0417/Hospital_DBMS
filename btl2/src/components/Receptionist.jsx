@@ -263,6 +263,104 @@ function Receptionist() {
 			special: "",
 		});
 	};
+	///////////////////////////////////////////////////////////////
+	const [patientId, setPatientId] = useState(""); // Trạng thái lưu ID nhập vào
+
+	const handleDeleteRecord = () => {
+		if (!patientId) {
+			alert("Please enter a Patient ID.");
+			return;
+		}
+
+		console.log("Attempting to delete record with ID:", patientId);
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+	///////////////////////////////////////////////////////////////
+	const [room, setRoom] = useState(""); // Trạng thái lưu Room
+	const [department, setDepartment] = useState(""); // Trạng thái lưu Department
+
+	const handleDeleteRoomDepartment = () => {
+		if (!room || !department) {
+			alert("Please enter both Room and Department to proceed.");
+			return;
+		}
+
+		console.log(
+			"Attempting to delete record with Room:",
+			room,
+			"and Department:",
+			department
+		);
+
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+
+	///////////////////////////////////////////////////////////////
+	const [doctorId, setDoctorId] = useState(""); // Trạng thái lưu Doctor ID được nhập
+
+	const handleDeleteDoctorRecord = () => {
+		if (!doctorId) {
+			alert("Please enter a Doctor ID.");
+			return;
+		}
+
+		console.log("Attempting to delete doctor record with ID:", doctorId);
+	};
+	////////////////////////////////////////////////////////////////
+	const [nurseId, setNurseId] = useState(""); // Trạng thái lưu Nurse ID
+
+	const handleDeleteNurse = () => {
+		if (!nurseId) {
+			alert("Please enter a valid Nurse ID to proceed.");
+			return;
+		}
+
+		console.log("Attempting to delete record with Nurse ID:", nurseId);
+
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+	///////////////////////////////////////////////////////////////
+	const [medicationId, setMedicationId] = useState(""); // Trạng thái lưu Medication ID
+
+	const handleDeleteMedication = () => {
+		if (!medicationId) {
+			alert("Please enter a valid Medication ID to proceed.");
+			return;
+		}
+
+		console.log(
+			"Attempting to delete record with Medication ID:",
+			medicationId
+		);
+
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+	//////////////////////////////////////////////////////////////
+	const [billId, setBillId] = useState(""); // Trạng thái lưu Bill ID
+
+	const handleDeleteBill = () => {
+		if (!billId) {
+			alert("Please enter a valid Bill ID to proceed.");
+			return;
+		}
+
+		console.log("Attempting to delete record with Bill ID:", billId);
+
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
+	///////////////////////////////////////////////////////////////
+	const [specialty, setSpecialty] = useState(""); // Trạng thái lưu Specialty
+
+	const handleDeleteSpecialty = () => {
+		if (!specialty) {
+			alert("Please enter a valid Specialty to proceed.");
+			return;
+		}
+
+		console.log("Attempting to delete record with Specialty:", specialty);
+
+		//! XỬ LÝ LOGIC XÓA RECORD TRONG DATABASE
+	};
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -434,9 +532,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter ID to delete"
 									className="input-delete"
+									value={patientId}
+									onChange={(e) => setPatientId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteRecord}>
 								Delete Record
 							</button>
 						</form>
@@ -507,14 +610,21 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Room to delete "
 									className="input-delete"
+									value={room}
+									onChange={(e) => setRoom(e.target.value)}
 								/>
 								<input
 									type="text"
 									placeholder="Enter Department to delete"
 									className="input-delete"
+									value={department}
+									onChange={(e) => setDepartment(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteRoomDepartment}>
 								Delete Record
 							</button>
 						</form>
@@ -716,9 +826,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Doctor ID to delete"
 									className="input-delete"
+									value={doctorId}
+									onChange={(e) => setDoctorId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteDoctorRecord}>
 								Delete Record
 							</button>
 						</form>
@@ -774,9 +889,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Nurse ID to delete"
 									className="input-delete"
+									value={nurseId}
+									onChange={(e) => setNurseId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteNurse}>
 								Delete Record
 							</button>
 						</form>
@@ -868,9 +988,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Medication ID to delete "
 									className="input-delete"
+									value={medicationId}
+									onChange={(e) => setMedicationId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteMedication}>
 								Delete Record
 							</button>
 						</form>
@@ -997,9 +1122,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Department to delete "
 									className="input-delete"
+									value={billId}
+									onChange={(e) => setBillId(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteBill}>
 								Delete Record
 							</button>
 						</form>
@@ -1044,9 +1174,14 @@ function Receptionist() {
 									type="text"
 									placeholder="Enter Specialty to delete "
 									className="input-delete"
+									value={specialty}
+									onChange={(e) => setSpecialty(e.target.value)}
 								/>
 							</div>
-							<button type="button" className="delete-button">
+							<button
+								type="button"
+								className="delete-button"
+								onClick={handleDeleteSpecialty}>
 								Delete Record
 							</button>
 						</form>
