@@ -18,6 +18,156 @@ import {
 import "./Dependent.css";
 
 function Receptionist() {
+
+	const [patient, setPatient] = useState([]);
+	const [assignment, setAssignment] = useState([]);
+	const [exam, setexam] = useState([]);
+	const [treat, settreat] = useState([]);
+	const [care, setcare] = useState([]);
+	const [med, setmed] = useState([]);
+	const [bill, setbill] = useState([]);
+	const [work, setwork] = useState([]);
+	const [specialty, setspec] = useState([]);
+
+    const fetchPatient = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/patient');
+
+			if (response.status === 200) {
+				setPatient(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	
+    };
+
+	const fetchAssignment = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/ass');
+
+			if (response.status === 200) {
+				setAssignment(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchExamination = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/exam');
+
+			if (response.status === 200) {
+				setexam(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchTreatment = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/treat');
+
+			if (response.status === 200) {
+				settreat(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchCare = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/care');
+
+			if (response.status === 200) {
+				setcare(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchMedication = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/med');
+
+			if (response.status === 200) {
+				setmed(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchBill = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/bill');
+
+			if (response.status === 200) {
+				setbill(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchwork = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/work');
+
+			if (response.status === 200) {
+				setwork(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	const fetchspecialty = async () => {
+		try {
+			const response = await axios.get('http://localhost:3010/api/recep/specialty');
+
+			if (response.status === 200) {
+				setspec(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+
+	useEffect(() => {
+		fetchPatient();
+		fetchAssignment();
+		fetchExamination();
+		fetchTreatment();
+		fetchCare();
+		fetchMedication();
+		fetchBill();
+		fetchwork();
+		fetchspecialty();
+	}, []);	
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -31,8 +181,6 @@ function Receptionist() {
 		phone: "",
 		height: "",
 		weight: "",
-		dependentName: "",
-		dependentPhone: "",
 	});
 
 	const handleInputChange = (e) => {
@@ -48,19 +196,19 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newRecord);
 		setNewRecord({
-			id: "",
-			name: "",
-			age: "",
-			gender: "",
-			phone: "",
-			height: "",
-			weight: "",
-			dependentName: "",
-			dependentPhone: "",
+			id: newRecord.id,
+			name: newRecord.name,
+			age: newRecord.age,
+			gender: newRecord.gender,
+			phone: newRecord.phone,
+			height: newRecord.height,
+			weight: newRecord.weight,
 		});
+		addPatient(newRecord)
 	};
 	//////////////////////////////////////////
 	const [newRoomRecord, setNewRoomRecord] = useState({
+		id: "",
 		room: "",
 		department: "",
 		purpose: "",
@@ -79,15 +227,17 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newRoomRecord);
 		setNewRoomRecord({
-			room: "",
-			department: "",
-			purpose: "",
+			id: newRoomRecord.id,
+			room: newRoomRecord.room,
+			department: newRoomRecord.department,
+			purpose: newRoomRecord.purpose,
 		});
+		addRoom(newRoomRecord)
 	};
 	//////////////////////////////////////////
 	const [newExamRecord, setNewExamRecord] = useState({
+		patientid: "",
 		doctorid: "",
-		doctorname: "",
 		diagnosis: "",
 		examdate: "",
 		nextdate: "",
@@ -107,18 +257,19 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newExamRecord);
 		setNewExamRecord({
-			doctorid: "",
-			doctorname: "",
-			diagnosis: "",
-			examdate: "",
-			nextdate: "",
-			fee: "",
+			patientid: newExamRecord.patientid,
+			doctorid: newExamRecord.doctorid,
+			diagnosis: newExamRecord.diagnosis,
+			examdate: newExamRecord.examdate,
+			nextdate: newExamRecord.nextdate,
+			fee: newExamRecord.fee,
 		});
+		addExam(newExamRecord)
 	};
 	///////////////////////////////////////////////////Dependent.css
 	const [newTreatRecord, setNewTreatRecord] = useState({
+		patientid: "",
 		doctorid: "",
-		doctorname: "",
 		admissiondate: "",
 		dischargedate: "",
 		result: "",
@@ -137,17 +288,18 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newTreatRecord);
 		setNewTreatRecord({
-			doctorid: "",
-			doctorname: "",
-			admissiondate: "",
-			dischargedate: "",
-			result: "",
+			patientid: newTreatRecord.patientid,
+			doctorid: newTreatRecord.doctorid,
+			admissiondate: newTreatRecord.admissiondate,
+			dischargedate: newTreatRecord.dischargedate,
+			result: newTreatRecord.result,
 		});
+		addTreatment(newTreatRecord)
 	};
 	///////////////////////////////////////////////////////
 	const [newCareRecord, setNewCareRecord] = useState({
+		patientid: "",
 		nurseid: "",
-		nursename: "",
 	});
 
 	const handleCareInputChange = (e) => {
@@ -163,9 +315,10 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newCareRecord);
 		setNewCareRecord({
-			nurseid: "",
-			nursename: "",
+			patientid: newCareRecord.patientid,
+			nurseid: newCareRecord.nurseid,
 		});
+		addCare(newCareRecord)
 	};
 	/////////////////////////////////////////////////////////
 	const [newMedRecord, setNewMedRecord] = useState({
@@ -189,18 +342,20 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newMedRecord);
 		setNewMedRecord({
-			medid: "",
-			medname: "",
-			price: "",
-			effect: "",
-			date: "",
+			medid: newMedRecord.medid,
+			medname: newMedRecord.medname,
+			price: newMedRecord.price,
+			effect: newMedRecord.effect,
+			date: newMedRecord.date,
 		});
+		addMed(newMedRecord)
 	};
 	//////////////////////////////////////////////////////////
 	const [newBillRecord, setNewBillRecord] = useState({
 		billid: "",
-		billname: "",
 		price: "",
+		date: "",
+		patientid: "",
 	});
 
 	const handleBillInputChange = (e) => {
@@ -216,13 +371,16 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newBillRecord);
 		setNewBillRecord({
-			billid: "",
-			billname: "",
-			price: "",
+			billid: newBillRecord.billid,
+			billname: newBillRecord.billname,
+			price: newBillRecord.price,
+			patientid: newBillRecord.patientid,
 		});
+		addBill(newBillRecord)
 	};
 	///////////////////////////////////////////////////////////
 	const [newWorkRecord, setNewWorkRecord] = useState({
+		id: "",
 		work: "",
 	});
 
@@ -239,11 +397,14 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newWorkRecord);
 		setNewWorkRecord({
-			work: "",
+			id: newWorkRecord.id,
+			work: newWorkRecord.work,
 		});
+		addWork(newWorkRecord)
 	};
 	//////////////////////////////////////////////////////////////
 	const [newSpecialRecord, setNewSpecialRecord] = useState({
+		id: "",
 		special: "",
 	});
 
@@ -260,9 +421,251 @@ function Receptionist() {
 		//! XỬ LÍ LOGIC DATABASE TRONG ĐÂY
 		console.log("New record added:", newSpecialRecord);
 		setNewSpecialRecord({
-			special: "",
+			id: newSpecialRecord.id,
+			special: newSpecialRecord.special,
 		});
+		addSpec(newSpecialRecord)
 	};
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	const addPatient = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addpatient', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addRoom = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addass', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addExam = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addexam', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addTreatment = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addtreat', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addCare = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addcare', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addMed = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addmed', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addBill = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addbill', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addWork = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addwork', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const addSpec = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/addspecialty', newOne);
+
+			if (response.status === 201) {
+				console.log('thêm thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	const dPatient = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletepatient', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dRoom = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deleteass', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dExam = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deleteexam', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dTreatment = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletetreat', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dCare = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletecare', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dMed = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletemed', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dBill = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletebill', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dWork = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletework', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+	const dSpec = async (newOne) => {
+		try {
+			const response = await axios.post('http://localhost:3010/api/recep/deletespecialty', newOne);
+
+			if (response.status === 201) {
+				console.log('xoa thành công:');
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+    };
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -310,22 +713,21 @@ function Receptionist() {
 									<th>My Phone Number</th>
 									<th>Height(m)</th>
 									<th>Weight(kg)</th>
-									<th>Dependent Name</th>
-									<th>Dependent Phone Number</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>20</td>
-									<td>Male</td>
-									<td>23,000,000VND</td>
-									<td>1,000,000 VND</td>
-									<td>0842210704</td>
-								</tr>
+								{patient.map((me, index) => (
+									<tr key={index}>
+										<td>{me.patient_id}</td>
+										<td>{`${me.fname || ""} ${me.mname || ""} ${
+										me.lname}`}</td>
+										<td>{me.age}</td>
+										<td>{me.gender}</td>
+										<td>{me.phone_number}</td>
+										<td>{me["Height(m)"]}</td>
+										<td>{me["Weight(kg)"]}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 						<br />
@@ -403,26 +805,6 @@ function Receptionist() {
 									required
 								/>
 							</div>
-							<div>
-								<label>Dependent Name: </label>
-								<input
-									type="text"
-									name="dependentName"
-									value={newRecord.dependentName}
-									onChange={handleInputChange}
-									required
-								/>
-							</div>
-							<div>
-								<label>Dependent Phone Number: </label>
-								<input
-									type="text"
-									name="dependentPhone"
-									value={newRecord.dependentPhone}
-									onChange={handleInputChange}
-									required
-								/>
-							</div>
 							<button type="submit">Add Record</button>
 						</form>
 						<br />
@@ -450,22 +832,36 @@ function Receptionist() {
 						<table>
 							<thead>
 								<tr>
+									<th>Patient ID</th>
 									<th>Room number</th>
 									<th>Department</th>
 									<th>Purpose</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>303</td>
-									<td>A</td>
-									<td>Treatment</td>
-								</tr>
+								{assignment.map((me, index) => (
+									<tr key={index}>
+										<td>{me.patient_id}</td>
+										<td>{me.departmentname}</td>
+										<td>{me.roomnumber}</td>
+										<td>{me.purpose}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleRoomAddRecord}>
+							<div>
+								<label>Patient ID: </label>
+								<input
+									type="text"
+									name="id"
+									value={newRoomRecord.id}
+									onChange={handleRoomInputChange}
+									required
+								/>
+							</div>
 							<div>
 								<label>Room: </label>
 								<input
@@ -529,8 +925,8 @@ function Receptionist() {
 						<table>
 							<thead>
 								<tr>
+									<th>Patient ID</th>
 									<th>Doctor ID</th>
-									<th>Doctor Name</th>
 									<th>Diagnosis</th>
 									<th>Examination Date</th>
 									<th>Next Examination Date</th>
@@ -538,35 +934,37 @@ function Receptionist() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>Cancer</td>
-									<td>2024-12-6</td>
-									<td>2050-12-6</td>
-									<td>1,000,000 VND</td>
-								</tr>
+								{exam.map((me, index) => (
+									<tr key={index}>
+										<td>{me.outpatient_id}</td>
+										<td>{me.doctor_id}</td>
+										<td>{me.diagnosis}</td>
+										<td>{new Date(me.examination_date).toLocaleDateString()}</td>
+										<td>{new Date(me.next_examination).toLocaleDateString()}</td>
+										<td>{me['Fee(VND)']}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleExamAddRecord}>
 							<div>
-								<label>Doctor ID: </label>
+								<label>Patient ID: </label>
 								<input
 									type="text"
-									name="doctorid"
-									value={newExamRecord.doctorid}
+									name="patientid"
+									value={newExamRecord.patientid}
 									onChange={handleExamInputChange}
 									required
 								/>
 							</div>
 							<div>
-								<label>Doctor Name: </label>
+								<label>Doctor ID: </label>
 								<input
 									type="text"
-									name="doctorname"
-									value={newExamRecord.doctorname}
+									name="doctorid"
+									value={newExamRecord.doctorid}
 									onChange={handleExamInputChange}
 									required
 								/>
@@ -638,39 +1036,41 @@ function Receptionist() {
 						</h2>
 						<table>
 							<tr>
+								<th>Patient ID</th>
 								<th>Doctor ID</th>
-								<th>Doctor Name</th>
 								<th>Admission Date</th>
 								<th>Discharge Date</th>
 								<th>Result</th>
 							</tr>
-							<tr>
-								<td>DO0001</td>
-								<td>Tran Anh Khoa</td>
-								<td>2024-12-6</td>
-								<td>2050-12-6</td>
-								<td>Success</td>
-							</tr>
+								{treat.map((me, index) => (
+									<tr key={index}>
+										<td>{me.inpatient_id}</td>
+										<td>{me.doctor_id}</td>
+										<td>{new Date(me.admission_date).toLocaleDateString()}</td>
+										<td>{new Date(me.discharge_date).toLocaleDateString()}</td>
+										<td>{me.result}</td>
+									</tr>
+								))}
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleTreatAddRecord}>
+							<div>
+								<label>Patient ID: </label>
+								<input
+									type="text"
+									name="patientid"
+									value={newTreatRecord.patientid}
+									onChange={handleTreatInputChange}
+									required
+								/>
+							</div>
 							<div>
 								<label>Doctor ID: </label>
 								<input
 									type="text"
 									name="doctorid"
 									value={newTreatRecord.doctorid}
-									onChange={handleTreatInputChange}
-									required
-								/>
-							</div>
-							<div>
-								<label>Doctor Name: </label>
-								<input
-									type="text"
-									name="doctorname"
-									value={newTreatRecord.doctorname}
 									onChange={handleTreatInputChange}
 									required
 								/>
@@ -732,33 +1132,36 @@ function Receptionist() {
 						</h2>
 						<table>
 							<tr>
+								<th>Patient ID</th>
 								<th>Nurse ID</th>
-								<th>Nurse Name</th>
 							</tr>
-							<tr>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{care.map((me, index) => (
+									<tr key={index}>
+										<td>{me.inpatient_id}</td>
+										<td>{me.nurse_id}</td>
+
+									</tr>
+								))}
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleCareAddRecord}>
+							<div>
+								<label>Patient ID: </label>
+								<input
+									type="text"
+									name="patientid"
+									value={newCareRecord.patientid}
+									onChange={handleCareInputChange}
+									required
+								/>
+							</div>
 							<div>
 								<label>Nurse ID: </label>
 								<input
 									type="text"
 									name="nurseid"
 									value={newCareRecord.nurseid}
-									onChange={handleCareInputChange}
-									required
-								/>
-							</div>
-							<div>
-								<label>Nurse Name: </label>
-								<input
-									type="text"
-									name="nursename"
-									value={newCareRecord.nursename}
 									onChange={handleCareInputChange}
 									required
 								/>
@@ -796,13 +1199,15 @@ function Receptionist() {
 								<th>Effect</th>
 								<th>Expired Date</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{med.map((me, index) => (
+									<tr key={index}>
+										<td>{me.medication_id}</td>
+										<td>{me.medication_name}</td>
+										<td>{me['Price(VND)']}</td>
+										<td>{me.effect}</td>
+										<td>{new Date(me.expired_date).toLocaleDateString()}</td>
+									</tr>
+								))}
 						</table>
 						<br />
 						<h3>Add New Record</h3>
@@ -878,21 +1283,25 @@ function Receptionist() {
 				)}
 
 				{activeSection === "bill" && (
-					<div class="container">
+					<div class="container"> 
 						<h2>
 							<FaMoneyBillWave /> Bill
 						</h2>
 						<table>
 							<tr>
 								<th>Bill ID</th>
-								<th>Date</th>
 								<th>Total Price(VND)</th>
+								<th>Date</th>
+								<th>Customer ID</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{bill.map((me, index) => (
+									<tr key={index}>
+										<td>{me.bill_id}</td>
+										<td>{me['Total_price(VND)']}</td>
+										<td>{new Date(me.date).toLocaleDateString()}</td>
+										<td>{me.customer_id}</td>
+									</tr>
+								))}
 						</table>
 						<br />
 						<h3>Add New Record</h3>
@@ -908,21 +1317,31 @@ function Receptionist() {
 								/>
 							</div>
 							<div>
-								<label>Bill Name: </label>
-								<input
-									type="text"
-									name="billname"
-									value={newBillRecord.billname}
-									onChange={handleBillInputChange}
-									required
-								/>
-							</div>
-							<div>
 								<label>Price: </label>
 								<input
 									type="number"
 									name="price"
 									value={newBillRecord.price}
+									onChange={handleBillInputChange}
+									required
+								/>
+							</div>
+							<div>
+								<label>Date: </label>
+								<input
+									type="date"
+									name="date"
+									value={newBillRecord.date}
+									onChange={handleBillInputChange}
+									required
+								/>
+							</div>
+							<div>
+								<label>Patient ID: </label>
+								<input
+									type="number"
+									name="patientid"
+									value={newBillRecord.patientid}
 									onChange={handleBillInputChange}
 									required
 								/>
@@ -963,18 +1382,33 @@ function Receptionist() {
 						<table>
 							<thead>
 								<tr>
+									<th>Employee ID</th>
 									<th>Department</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-								</tr>
+								{work.map((me, index) => (
+									<tr key={index}>
+										<td>{me.employee_id}</td>
+										<td>{me.departmentname}</td>
+
+									</tr>
+								))}
 							</tbody>
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleWorkAddRecord}>
+							<div>
+								<label>Employee ID: </label>
+								<input
+									type="text"
+									name="id"
+									value={newWorkRecord.id}
+									onChange={handleWorkInputChange}
+									required
+								/>
+							</div>
 							<div>
 								<label>Department: </label>
 								<input
@@ -1013,15 +1447,30 @@ function Receptionist() {
 						</h2>
 						<table>
 							<tr>
+								<th>Doctor ID</th>
 								<th>My speciaty(ies)</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-							</tr>
+								{specialty.map((me, index) => (
+									<tr key={index}>
+										<td>{me.doctor_id}</td>
+										<td>{me.specialty}</td>
+
+									</tr>
+								))}
 						</table>
 						<br />
 						<h3>Add New Record</h3>
 						<form onSubmit={handleSpecialAddRecord}>
+							<div>
+								<label>Doctor ID: </label>
+								<input
+									type="text"
+									name="id"
+									value={newSpecialRecord.id}
+									onChange={handleSpecialInputChange}
+									required
+								/>
+							</div>
 							<div>
 								<label>Specialty: </label>
 								<input

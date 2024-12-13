@@ -2,7 +2,9 @@
 const jwt = require('jsonwebtoken');
 const {getPatientbyID} = require('../models/patient');
 const {getDependentbyID} = require('../models/dependent');
-const {getEmployeebyID} = require('../models/employee');
+const {getDoctorbyID} = require('../models/doctor');
+const {getNursebyID} = require('../models/nurse');
+const {getOtherbyID} = require('../models/other');
 const {getUserToken} = require('../models/user');
 
 
@@ -62,8 +64,14 @@ const getUserByID = async(req, res, next) => {
         else if (type=='dependent') {
             result = await getDependentbyID(id);
         }
-        else if (type=='doctor' || type=='nurse' || type =='other') {
-            result = await getEmployeebyID(id);
+        else if (type=='doctor') {
+            result = await getDoctorbyID(id);
+        }
+        else if (type=='nurse') {
+            result = await getNursebyID(id);
+        }
+        else if (type=='other') {
+            result = await getOtherbyID(id);
         }
         else{
             console.log("wwtf co role khac nua a")

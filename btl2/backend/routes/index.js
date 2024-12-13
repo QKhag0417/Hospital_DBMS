@@ -5,6 +5,7 @@ const get_nurse_info = require('./nurse_info');
 const get_dependent_info = require('./dependent_info');
 const get_other_info = require('./other_info');
 const get_patient_info = require('./patient_info');
+const get_recep_info = require('./recep_info');
 const router = express.Router();
 
 router.use(get_home_info);
@@ -13,5 +14,6 @@ router.use(get_nurse_info);
 router.use(get_dependent_info);
 router.use(get_other_info);
 router.use(get_patient_info);
+router.use(get_recep_info);
 
 module.exports = router;

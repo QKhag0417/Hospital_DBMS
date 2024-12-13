@@ -18,6 +18,183 @@ import {
 import "./Dependent.css";
 
 function Patient() {
+	const token = localStorage.getItem("userCredentials")
+		? JSON.parse(localStorage.getItem("userCredentials")).token
+		: null;
+	const [myinfo, setMyInfo] = useState([]);
+	const [myinfoass, setMyInfoass] = useState([]);
+	const [myinfoexam, setMyInfoexam] = useState([]);
+	const [myinfotreat, setMyInfotreat] = useState([]);
+	const [myinfocare, setMyInfocare] = useState([]);
+	const [myinfomed, setMyInfomed] = useState([]);
+	const [myinfobill, setMyInfobill] = useState([]);
+
+	const GetMyInfo = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/info",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfo(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfoass = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/assigment",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfoass(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfoexam = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/exam",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfoexam(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfotreat = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/treatment",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfotreat(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfocare = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/care",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfocare(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfomed = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/medication",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfomed(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfobill = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/patient/bill",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfobill(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	
+
+	useEffect(() => {
+		GetMyInfo();
+		GetMyInfoass();
+		GetMyInfoexam();
+		GetMyInfotreat();
+		GetMyInfocare();
+		GetMyInfomed();
+		GetMyInfobill();
+	}, []);
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -30,6 +207,7 @@ function Patient() {
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
+
 	return (
 		<div className="bigone">
 			<div className="top-bar">
@@ -73,17 +251,17 @@ function Patient() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>20</td>
-									<td>Male</td>
-									<td>23,000,000VND</td>
-									<td>1,000,000 VND</td>
-									<td>0842210704</td>
-								</tr>
+								{myinfo.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.patient_id}</td>
+										<td>{patient.patient_name}</td>
+										<td>{patient.patient_age}</td>
+										<td>{patient.patient_gender}</td>
+										<td>{patient.patient_phone_number}</td>
+										<td>{patient["patient_height(m)"]}</td>
+										<td>{patient["patient_weight(kg)"]}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -102,16 +280,17 @@ function Patient() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>303</td>
-									<td>A</td>
-									<td>Treatment</td>
-								</tr>
+								{myinfoass.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.room}</td>
+										<td>{patient.deparment}</td>
+										<td>{patient.purpose}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
 				)}
-
 				{activeSection === "examination" && (
 					<div className="container">
 						<h2>
@@ -129,14 +308,15 @@ function Patient() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>Cancer</td>
-									<td>2024-12-6</td>
-									<td>2050-12-6</td>
-									<td>1,000,000 VND</td>
-								</tr>
+								{myinfoexam.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.doctor_id}</td>
+										<td>{patient.doctor_name}</td>
+										<td>{patient.diagnosis}</td>
+										<td>{patient.examination_date}</td>
+										<td>{patient.next_examination}</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -155,13 +335,15 @@ function Patient() {
 								<th>Discharge Date</th>
 								<th>Result</th>
 							</tr>
-							<tr>
-								<td>DO0001</td>
-								<td>Tran Anh Khoa</td>
-								<td>2024-12-6</td>
-								<td>2050-12-6</td>
-								<td>Success</td>
-							</tr>
+								{myinfotreat.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.doctor_id}</td>
+										<td>{patient.doctor_name}</td>
+										<td>{patient.admission_date}</td>
+										<td>{patient.discharge_date}</td>
+										<td>{patient.result}</td>
+									</tr>
+								))}
 						</table>
 					</div>
 				)}
@@ -176,10 +358,12 @@ function Patient() {
 								<th>Nurse ID</th>
 								<th>Nurse Name</th>
 							</tr>
-							<tr>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{myinfocare.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.nurse_id}</td>
+										<td>{patient.nurse_name}</td>
+									</tr>
+								))}
 						</table>
 					</div>
 				)}
@@ -193,17 +377,19 @@ function Patient() {
 							<tr>
 								<th>Medication ID</th>
 								<th>Medication Name</th>
-								<th>Price</th>
+								<th>Price(VND)</th>
 								<th>Effect</th>
 								<th>Expired Date</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>B001</td>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{myinfomed.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.medication_id}</td>
+										<td>{patient.medication_name}</td>
+										<td>{patient['Price(VND)']}</td>
+										<td>{patient.effect}</td>
+										<td>{patient.expired_date}</td>
+									</tr>
+								))}
 						</table>
 					</div>
 				)}
@@ -219,11 +405,13 @@ function Patient() {
 								<th>Date</th>
 								<th>Total Price(VND)</th>
 							</tr>
-							<tr>
-								<td>B001</td>
-								<td>1,000,000 VND</td>
-								<td>2024-11-30</td>
-							</tr>
+								{myinfobill.map((patient, index) => (
+									<tr key={index}>
+										<td>{patient.bill_id}</td>
+										<td>{patient.date}</td>
+										<td>{patient['Total_price(VND)']}</td>
+									</tr>
+								))}
 						</table>
 					</div>
 				)}

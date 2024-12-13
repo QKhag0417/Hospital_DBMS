@@ -18,6 +18,65 @@ import {
 import "./Dependent.css";
 
 function Other() {
+	const token = localStorage.getItem("userCredentials")
+		? JSON.parse(localStorage.getItem("userCredentials")).token
+		: null;
+
+	const [myinfo, setMyInfo] = useState([]);
+	const [myinfoass, setMyInfoass] = useState([]);
+
+	
+
+	const GetMyInfo = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/other/info",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfo(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const GetMyInfoWork = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3010/api/other/workplace",
+				{},
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (response.status === 200) {
+				setMyInfoass(response.data);
+			} else if (response.status === 404) {
+				window.location.assign("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		GetMyInfo();
+		GetMyInfoWork();
+	}, []);
+
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -63,18 +122,24 @@ function Other() {
 									<th>Fixed Salary</th>
 									<th>Bonus Salary</th>
 									<th>Phone Number</th>
+									<th>Experience year</th>
+									<th>Working hour</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-									<td>Tran Anh Khoa</td>
-									<td>20</td>
-									<td>Male</td>
-									<td>23,000,000VND</td>
-									<td>1,000,000 VND</td>
-									<td>0842210704</td>
-								</tr>
+								{myinfo.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.employee_id}</td>
+											<td>{doctor.name}</td>
+											<td>{doctor.age}</td>
+											<td>{doctor.gender}</td>
+											<td>{doctor['Fixed_Salary(VND)']}</td>
+											<td>{doctor['Bonus(VND)']}</td>
+											<td>{doctor.phone_number}</td>
+											<td>{doctor.experience_year}</td>
+											<td>{doctor.working_hour}</td>
+										</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
@@ -98,9 +163,11 @@ function Other() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>DO0001</td>
-								</tr>
+								{myinfoass.map((doctor, index) => (
+										<tr key={index}>
+											<td>{doctor.department}</td>
+										</tr>
+								))}
 							</tbody>
 						</table>
 					</div>
