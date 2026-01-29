@@ -14,14 +14,7 @@ Use backend APIs to exchange data between the frontend and the database
 
 This project was developed as part of my DBMS / Full-Stack Web Development coursework 🧑‍💻
 
-Hospital_DBMS/
-├─ backend/        # Backend server
-├─ src/            # React frontend source code
-├─ public/         # Static frontend files
-├─ input.sql       # Sample SQL scripts
-├─ source.sql      # Main project SQL scripts
-├─ package.json
-└─ README.md
+<pre> ```bash Hospital_DBMS/ ├─ backend/ # Backend server ├─ src/ # React frontend source code ├─ public/ # Static frontend files ├─ input.sql # Sample SQL scripts ├─ source.sql # Main project SQL scripts ├─ package.json └─ README.md ``` </pre>
 🧠 Technologies Used
 Layer	Technology
 Frontend	React.js
