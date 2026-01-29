@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+# 🏥 Hospital_DBMS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Một hệ thống quản lý bệnh viện full-stack web app, gồm cả **frontend (React)** và **backend (Node/Express)**, sử dụng **PostgreSQL** làm cơ sở dữ liệu.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Giới thiệu
 
-### `npm start`
+Ứng dụng cho phép:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Quản lý người dùng (đăng ký / đăng nhập)
+- Xem và xử lý dữ liệu bệnh nhân, bác sĩ, phòng ốc…
+- Giao diện React hiện đại
+- API backend để phục vụ dữ liệu cho frontend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Đây là đồ án môn **DBMS / Full-Stack Web Development** của mình 🧑‍💻
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📂 Cấu trúc thư mục
 
-### `npm run build`
+Hospital_DBMS/
+├─ backend/ # Backend server
+├─ src/ # Frontend React app
+├─ public/ # Files tĩnh frontend
+├─ input.sql # SQL scripts mẫu
+├─ source.sql # SQL scripts dự án
+├─ package.json
+└─ README.md
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+yaml
+Copy code
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🧠 Công nghệ sử dụng
 
-### `npm run eject`
+| Phần | Công nghệ |
+|------|-----------|
+| Frontend | React.js |
+| Backend | Node.js + Express |
+| Database | PostgreSQL |
+| Quản lý gói | npm |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## ⚙️ Cài đặt & chạy
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🔹 1. Clone repo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+git clone https://github.com/QKhag0417/Hospital_DBMS.git
+cd Hospital_DBMS
+🔹 2. Cài đặt dependencies
+Backend:
 
-## Learn More
+bash
+Copy code
+cd backend
+npm install
+Frontend:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+bash
+Copy code
+cd ..
+npm install
+🔹 3. Thiết lập database PostgreSQL
+Cài PostgreSQL
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Tạo database mới, ví dụ:
 
-### Code Splitting
+sql
+Copy code
+CREATE DATABASE hospital_db;
+Chỉnh file config (nếu có) để kết nối database
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+🔹 4. Chạy backend
+bash
+Copy code
+cd backend
+npm start
+🔹 5. Chạy frontend
+bash
+Copy code
+npm start
+Frontend mặc định sẽ mở ở:
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+👉 http://localhost:3000
