@@ -1,88 +1,70 @@
-# 🏥 Hospital_DBMS
+A full-stack hospital management web application, including frontend (React) and backend (Node/Express), using PostgreSQL as the database.
 
-Một hệ thống quản lý bệnh viện full-stack web app, gồm cả **frontend (React)** và **backend (Node/Express)**, sử dụng **PostgreSQL** làm cơ sở dữ liệu.
+🚀 Introduction
 
----
+This application allows users to:
 
-## 🚀 Giới thiệu
+Manage user accounts (register / login)
 
-Ứng dụng cho phép:
+View and process data related to patients, doctors, rooms, and more
 
-- Quản lý người dùng (đăng ký / đăng nhập)
-- Xem và xử lý dữ liệu bệnh nhân, bác sĩ, phòng ốc…
-- Giao diện React hiện đại
-- API backend để phục vụ dữ liệu cho frontend
+Interact with a modern React-based interface
 
-Đây là đồ án môn **DBMS / Full-Stack Web Development** của mình 🧑‍💻
+Use backend APIs to exchange data between the frontend and the database
 
----
-
-## 📂 Cấu trúc thư mục
+This project was developed as part of my DBMS / Full-Stack Web Development coursework 🧑‍💻
 
 Hospital_DBMS/
-├─ backend/ # Backend server
-├─ src/ # Frontend React app
-├─ public/ # Files tĩnh frontend
-├─ input.sql # SQL scripts mẫu
-├─ source.sql # SQL scripts dự án
+├─ backend/        # Backend server
+├─ src/            # React frontend source code
+├─ public/         # Static frontend files
+├─ input.sql       # Sample SQL scripts
+├─ source.sql      # Main project SQL scripts
 ├─ package.json
 └─ README.md
-
-yaml
-Copy code
-
----
-
-## 🧠 Công nghệ sử dụng
-
-| Phần | Công nghệ |
-|------|-----------|
-| Frontend | React.js |
-| Backend | Node.js + Express |
-| Database | PostgreSQL |
-| Quản lý gói | npm |
-
----
-
-## ⚙️ Cài đặt & chạy
-
-### 🔹 1. Clone repo
-
-```bash
+🧠 Technologies Used
+Layer	Technology
+Frontend	React.js
+Backend	Node.js + Express
+Database	PostgreSQL
+Package Manager	npm
+⚙️ Installation & Running the Project
+🔹 1. Clone the repository
 git clone https://github.com/QKhag0417/Hospital_DBMS.git
 cd Hospital_DBMS
-🔹 2. Cài đặt dependencies
+
+🔹 2. Install dependencies
+
 Backend:
 
-bash
-Copy code
 cd backend
 npm install
+
+
 Frontend:
 
-bash
-Copy code
 cd ..
 npm install
-🔹 3. Thiết lập database PostgreSQL
-Cài PostgreSQL
 
-Tạo database mới, ví dụ:
+🔹 3. Set up the PostgreSQL database
 
-sql
-Copy code
+Install PostgreSQL
+
+Create a new database, for example:
+
 CREATE DATABASE hospital_db;
-Chỉnh file config (nếu có) để kết nối database
 
-🔹 4. Chạy backend
-bash
-Copy code
+
+Update the database configuration file (if applicable) with your database credentials
+
+🔹 4. Run the backend server
 cd backend
 npm start
-🔹 5. Chạy frontend
-bash
-Copy code
+
+🔹 5. Run the frontend
 npm start
-Frontend mặc định sẽ mở ở:
+
+
+The frontend will typically run at:
 
 👉 http://localhost:3000
